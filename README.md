@@ -12,6 +12,6 @@ We went through different options of frontend frameworks and came to choose Reac
 
 # Contributing
 <ul>
-  <li><a>Wiktor Isaksson</a></li>
-  <li href="https://github.com/Vcaze"><a>Viktor Nordenberg</a></li>
+  <li><a href="https://github.com/wiis22">Wiktor Isaksson</a></li>
+  <li><a href="https://github.com/Vcaze">Viktor Nordenberg</a></li>
 </ul>
