@@ -36,7 +36,7 @@ app.post("/update", async (req, res) => {
 app.post("/newdoc", async (req, res) => {
     const result = await documents.addOne(req.body);
 
-    return res.redirect(`/${result.lastID}`);//last id sätts alldrig?
+    return res.redirect(`/${result.lastID}`);
 });
 
 
