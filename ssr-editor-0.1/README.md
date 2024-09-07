@@ -1,3 +1,3 @@
 # SSR Editor
 
-Starter project for DV1677 JSRamverk
+The RedMe information for this project will be outside this map directly under the root JsRamverk.
