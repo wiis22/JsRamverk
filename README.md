@@ -9,3 +9,9 @@ The first thing we had to do to get be able to start working on the project was 
 
 ### Choosing frontend framework
 We went through different options of frontend frameworks and came to choose React. We choose React mainly because we want to learn it and we found the things we seen of it so far to be interesting and useful.
+
+# Contributing
+<li>
+  <a>Wiktor Isaksson</a>
+  <a>Viktor Nordenberg</a>
+</li>
