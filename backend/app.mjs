@@ -8,7 +8,7 @@ import path from 'path';
 import morgan from 'morgan';
 import cors from 'cors';
 
-import dbFunctions from "./db/mongodb/src/db_functions.js";
+import dbFunctions from "./";
 
 const app = express();
 
@@ -27,32 +27,27 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.post("/update", async (req, res) => {
-//     const result = await documents.updateOne(req.body);
-// 
-//     return res.redirect(`/${req.body.lastID}`);
-// });
+app.post("/update", async (req, res) => {
+    const result = await documents.updateOne(req.body);
 
-app.post("/newdoc", async (req, res) => {
-    const data = {
-        title: req.body.title,
-        content: "" 
-    };
-    
-    const result = await dbFunctions.addOne("documents", data);
-
-    return res.redirect(`/${result}`);
+    return res.redirect(`/${req.body.lastID}`);
 });
 
-// app.get('/:id', async (req, res) => {
-//     return res.render(
-//         "doc",
-//         { doc: await documents.getOne(req.params.id) }
-//     );
-// });
+app.post("/newdoc", async (req, res) => {
+    const result = await documents.addOne(req.body);
+
+    return res.redirect(`/${result.lastID}`);
+});
+
+app.get('/:id', async (req, res) => {
+    return res.render(
+        "doc",
+        { doc: await documents.getOne(req.params.id) }
+    );
+});
 
 app.get('/', async (req, res) => {
-    return res.render("index", { docs: {} });
+    return res.render("index", { docs: await documents.getAll() });
 });
 
 app.listen(port, () => {

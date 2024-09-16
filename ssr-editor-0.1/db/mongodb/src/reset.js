@@ -1,5 +1,5 @@
 /**
- * Connect to the database and setup it with some default data.
+ * Connect to the database and reset it
  */
 "use strict";
 
@@ -8,15 +8,10 @@ const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
 const fs = require("fs");
 const path = require("path");
-const docs = JSON.parse(fs.readFileSync(
-    path.resolve(__dirname, "setup.json"),
-    "utf8"
-));
 
 
-
-// Do it.
-resetCollection(dsn, "crowd", docs)
+// reset collection documents
+resetCollection(dsn, "documents")
     .catch(err => console.log(err));
 
 
@@ -35,13 +30,12 @@ resetCollection(dsn, "crowd", docs)
  *
  * @return {Promise<void>} Void
  */
-async function resetCollection(dsn, colName, doc) {
+async function resetCollection(dsn, colName) {
     const client  = await mongo.connect(dsn);
     const db = await client.db();
     const col = await db.collection(colName);
 
     await col.deleteMany();
-    await col.insertMany(doc);
 
     await client.close();
 }

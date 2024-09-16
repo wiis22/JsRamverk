@@ -1,13 +1,13 @@
 <%- include('includes/header'); %>
     <h2>Dokument</h2>
 
-    <div class="docs">
+    <!-- <div class="docs">
         <% docs.forEach(function(doc){ %>
             <div class="single-doc">
                 <h3><a href="/<%= doc.id %>"><%= doc.title %></a></h3>
             </div>
         <% }); %>
-    </div>
+    </div> -->
 
     <form method="POST" action="/newdoc" class="new-doc" >
         <label for="title">Skapa nytt Dokument:</label>
