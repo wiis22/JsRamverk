@@ -24,7 +24,7 @@ const dbFunctions = {
      *
      * @throws Error when database operation fails.
      *
-     * @return {string} Return the id in a string.
+     * @return {string} Return the id.
      */
     addOne: async function addOne(colName, data) {
         console.log('DSN:', dsn);
@@ -36,7 +36,8 @@ const dbFunctions = {
 
         await client.close();
 
-        return result.insertedId;
+        return result.insertedId; //tock away the .tostring().
+        // As it allready gets converted to sting in the index.ejs.
     },
 
     /**
@@ -49,7 +50,7 @@ const dbFunctions = {
      *
      * @throws Error when database operation fails.
      *
-     * @return {} The resould in JSON format
+     * @return {Object|null} The resould in JSON format, or null if no doc found.
      */
     getAll: async function getAll(colName) {
         try {
@@ -57,9 +58,9 @@ const dbFunctions = {
             const client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
-    
+
             const result = await col.find().toArray();
-    
+
             await client.close();
 
             console.log(result);
@@ -81,7 +82,7 @@ const dbFunctions = {
      *
      * @throws Error when database operation fails.
      *
-     * @return {} The resould in JSON format
+     * @return {Object|null} The resould in JSON format
      */
     getOne: async function getOne(colName, id) {
         try {
@@ -95,15 +96,12 @@ const dbFunctions = {
             const objectId = new ObjectId(id);
             console.log('objectId', objectId);
 
-
             const client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
 
-
-
             const result = await col.findOne({ _id: objectId });
-    
+
             await client.close();
 
             console.log('result:', result);
