@@ -27,11 +27,17 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.post("/update", async (req, res) => {
-//     const result = await documents.updateOne(req.body);
-// 
-//     return res.redirect(`/${req.body.lastID}`);
-// });
+app.post("/update", async (req, res) => {
+    const data = {
+        _id: req.body.lastID,
+        title: req.body.title,
+        content: req.body.content
+    };
+
+    const result = await dbFunctions.updateOneDoc("documents",data);
+
+    return res.redirect(`/${data._id}`);
+});
 
 app.post("/newdoc", async (req, res) => {
     const data = {

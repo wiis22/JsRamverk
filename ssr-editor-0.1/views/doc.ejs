@@ -9,7 +9,7 @@
             <label for="content">Innehåll</label>
             <textarea class="doc-content textarea" name="content"><%= doc.content %></textarea>
 
-            <input hidden name="lastID" value="<%= doc.id %>"/>
+            <input hidden name="lastID" value="<%= doc._id %>"/>
 
             <input class="button" type="submit" value="Spara" />
         </form>
