@@ -44,17 +44,37 @@ app.post("/newdoc", async (req, res) => {
     return res.redirect(`/${result}`);
 });
 
-// app.get('/:id', async (req, res) => {
-//     return res.render(
-//         "doc",
-//         { doc: await documents.getOne(req.params.id) }
-//     );
-// });
+app.get('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        if (id.length !== 24){
+            return res.status(400).send('Invalid ID format');
+        }
+
+        const result = await dbFunctions.getOne("documents", id);
+
+        if (!result) {
+            return res.status(404).send('Document not found');
+        }
+
+        return res.render("doc", { doc: result });
+    } catch(error) {
+        console.error('Error fething document:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+});
 
 app.get('/', async (req, res) => {
 
-    const result = await dbFunctions.getAll("documents");
-    return res.render("index", { docs: result });
+    try {
+        const result = await dbFunctions.getAll("documents");
+
+        return res.render("index", { docs: result });
+    } catch(error) {
+        console.error('Error fetching documents:', error);
+        return res.status(500).send('Internal server Error');
+    }
 });
 
 app.listen(port, () => {
