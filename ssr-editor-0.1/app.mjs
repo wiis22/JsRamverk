@@ -52,7 +52,9 @@ app.post("/newdoc", async (req, res) => {
 // });
 
 app.get('/', async (req, res) => {
-    return res.render("index", { docs: {} });
+
+    const result = await dbFunctions.getAll("documents");
+    return res.render("index", { docs: result });
 });
 
 app.listen(port, () => {

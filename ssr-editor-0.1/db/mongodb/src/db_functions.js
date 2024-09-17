@@ -12,14 +12,12 @@ const path = require("path");
 
 const dbFunctions = {
     /**
-     * Reset a collection by removing existing content and insert a default
-     * set of documents.
+     * Insert one into the collection
      *
      * @async
      *
-     * @param {string} dsn     DSN to connect to database.
      * @param {string} colName Name of collection.
-     * @param {string} doc     Documents to be inserted into collection.
+     * @param {string} data    Data to be inserted into Db.
      *
      * @throws Error when database operation fails.
      *
@@ -36,7 +34,38 @@ const dbFunctions = {
         await client.close();
 
         return result.insertedId.toString();
-    }
+    },
+
+    /**
+     * Insert one into the collection
+     *
+     * @async
+     *
+     * @param {string} colName Name of collection.
+     * @param {string} data    Data to be inserted into Db.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {} The resould in JSON format
+     */
+        getAll: async function getAll(colName) {
+            try {
+                console.log('DSN:', dsn);
+                const client  = await mongo.connect(dsn);
+                const db = await client.db();
+                const col = await db.collection(colName);
+        
+                const result = await col.find().toArray();
+        
+                await client.close();
+
+                console.log(result);
+
+                return result;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 };
 
 module.exports = dbFunctions;
