@@ -13,6 +13,7 @@ import dbFunctions from "./db/mongodb/src/db_functions.js";
 const app = express();
 
 app.disable('x-powered-by');
+app.use(cors());
 
 app.set("view engine", "ejs");
 
@@ -27,16 +28,18 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/update", async (req, res) => {
+app.post("/api/update", async (req, res) => {
     const data = {
         _id: req.body.lastID,
         title: req.body.title,
         content: req.body.content
     };
 
-    const result = await dbFunctions.updateOneDoc("documents",data);
+    const id = await dbFunctions.updateOneDoc("documents",data);
 
-    return res.redirect(`/${data._id}`);
+    const result = await dbFunctions.getOne("documents", id);
+
+    res.json(result); // need to check here if this works and what the format of the id is
 });
 
 app.post("/newdoc", async (req, res) => {
@@ -47,7 +50,11 @@ app.post("/newdoc", async (req, res) => {
     
     const result = await dbFunctions.addOne("documents", data);
 
-    return res.redirect(`/${result}`);
+    if (!result) {
+        return res.status(404).json({ error: 'No returned id when trying to add new document' });
+    }
+
+    return res.redirect(`/${result}`); // we can't use any express redirects to keep it SPA
 });
 
 app.get('/:id', async (req, res) => {
@@ -64,7 +71,7 @@ app.get('/:id', async (req, res) => {
             return res.status(404).send('Document not found');
         }
 
-        return res.render("doc", { doc: result });
+        return res.json(result);
     } catch(error) {
         console.error('Error fething document:', error);
         return res.status(500).send('Internal Server Error');

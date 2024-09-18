@@ -10,4 +10,4 @@ const fs = require("fs");
 const path = require("path");
 
 
-// behövs nog inte
+// denna fil behövs nog inte och ska tas bort
