@@ -78,7 +78,7 @@ app.get('/api/:id', async (req, res) => {
     }
 });
 
-app.get('/api/test2', async (req, res) => {
+app.get('/api/test3', async (req, res) => {
 
     try {
         const result = await dbFunctions.getAll("documents");
