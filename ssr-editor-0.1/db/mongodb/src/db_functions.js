@@ -131,16 +131,16 @@ const dbFunctions = {
         try {
 
             console.log('DSN:', dsn);
-            console.log('ID:', data._id);
+            console.log('ID:', data.id);
             console.log('Title:', data.title);
             console.log('Content:', data.content);
 
-            if (!ObjectId.isValid(String(data._id))) {
+            if (!ObjectId.isValid(String(data.id))) {
                 throw new Error("ID format is not valid");
             }
             // ObjectId: Needs to be super sure
             // that id is in a correct format else it wont work.
-            const objectId = new ObjectId(String(data._id));
+            const objectId = new ObjectId(String(data.id));
             console.log('objectId', objectId);
 
             const client  = await mongo.connect(dsn);

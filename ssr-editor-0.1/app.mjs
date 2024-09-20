@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/update", async (req, res) => {
     const data = {
-        _id: req.body.lastID,
+        id: req.body.id,
         title: req.body.title,
         content: req.body.content
     };
@@ -42,7 +42,7 @@ app.post("/api/update", async (req, res) => {
     res.json(result); // need to check here if this works and what the format of the id is
 });
 
-app.post("/newdoc", async (req, res) => {
+app.post("/api/newdoc", async (req, res) => {
     const data = {
         title: req.body.title,
         content: "" 
@@ -57,7 +57,7 @@ app.post("/newdoc", async (req, res) => {
     return res.redirect(`/${result}`); // we can't use any express redirects to keep it SPA
 });
 
-app.get('/:id', async (req, res) => {
+app.get('/api/:id', async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -78,7 +78,7 @@ app.get('/:id', async (req, res) => {
     }
 });
 
-app.get('/', async (req, res) => {
+app.get('/api/', async (req, res) => {
 
     try {
         const result = await dbFunctions.getAll("documents");

@@ -16,10 +16,10 @@ function Doc() {
             setTitle(result.title);
             setContent(result.content);
         };
-        
+
         fetchDocument();
     }, [id]); // the id part on this row is for if the id parameter in the URL changes, this runs again
-
+        //behöver en try typ om inte id finns
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -30,7 +30,7 @@ function Doc() {
             content
         };
 
-        const response = await fetch('http://localhost:3001/update', { // använder inte response nu men kan vara bra att göra en try catch
+        const response = await fetch('http://localhost:3001/api/update', { // använder inte response nu men kan vara bra att göra en try catch
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -61,3 +61,5 @@ function Doc() {
         </div>
     )
 }
+
+export default Doc;
