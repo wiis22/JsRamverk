@@ -10,7 +10,7 @@ function App() {
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <Route path="/doc/:id" component={Doc} />
-                    {/* Other routes */}
+                    {/* Other routes hello */}
                 </Switch>
             </Layout>
         </Router>
