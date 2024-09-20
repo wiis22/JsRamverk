@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/api/update-doc", async (req, res) => {
+app.post("/api/update", async (req, res) => {
     const data = {
         id: req.body.id,
         title: req.body.title,
@@ -42,7 +42,7 @@ app.post("/api/update-doc", async (req, res) => {
     res.json(result); // need to check here if this works and what the format of the id is
 });
 
-app.post("/api/new-doc", async (req, res) => {
+app.post("/api/newdoc", async (req, res) => {
     const data = {
         title: req.body.title,
         content: "" 
@@ -78,7 +78,7 @@ app.get('/api/:id', async (req, res) => {
     }
 });
 
-app.get('/api/get-all-docs', async (req, res) => {
+app.get('/api/', async (req, res) => {
 
     try {
         const result = await dbFunctions.getAll("documents");
