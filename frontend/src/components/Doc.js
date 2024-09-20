@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-function Doc() {
+export default function Doc() {
     const { id } = useParams();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -61,5 +61,3 @@ function Doc() {
         </div>
     )
 }
-
-export default Doc;

@@ -42,7 +42,7 @@ app.post("/api/update", async (req, res) => {
     res.json(result); // need to check here if this works and what the format of the id is
 });
 
-app.post("/api/newdoc", async (req, res) => {
+app.post("/api/new-doc", async (req, res) => {
     const data = {
         title: req.body.title,
         content: "" 
@@ -78,16 +78,15 @@ app.get('/api/:id', async (req, res) => {
     }
 });
 
-app.get('/api/test3', async (req, res) => {
-
+app.get('/api/get-all-docs', async (req, res) => {
     try {
         const result = await dbFunctions.getAll("documents");
-
-        return res.render("index", { docs: result });
     } catch(error) {
         console.error('Error fetching documents:', error);
         return res.status(500).send('Internal server Error');
     }
+
+    res.json(result);
 });
 
 app.listen(port, () => {
