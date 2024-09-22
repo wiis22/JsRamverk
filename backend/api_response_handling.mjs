@@ -57,7 +57,7 @@ app.post("/api/new-doc", async (req, res) => {
     res.json(result); 
 });
 
-app.get('/api/:id', async (req, res) => {
+app.get('/api/doc/:id', async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -66,12 +66,13 @@ app.get('/api/:id', async (req, res) => {
         }
 
         const result = await dbFunctions.getOne("documents", id);
-
+        console.log(result);
+        
         if (!result) {
             return res.status(404).send('Document not found');
         }
 
-        return res.json(result);
+        res.json(result);
     } catch(error) {
         console.error('Error fething document:', error);
         return res.status(500).send('Internal Server Error');
@@ -81,12 +82,12 @@ app.get('/api/:id', async (req, res) => {
 app.get('/api/get-all-docs', async (req, res) => {
     try {
         const result = await dbFunctions.getAll("documents");
+        // console.log("res:", result);
+        res.json(result);
     } catch(error) {
         console.error('Error fetching documents:', error);
         return res.status(500).send('Internal server Error');
     }
-
-    res.json(result);
 });
 
 app.listen(port, () => {

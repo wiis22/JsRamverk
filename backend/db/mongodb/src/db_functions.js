@@ -54,7 +54,7 @@ const dbFunctions = {
      */
     getAll: async function getAll(colName) {
         try {
-            console.log('DSN:', dsn);
+            // console.log('DSN:', dsn);
             const client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
@@ -65,7 +65,7 @@ const dbFunctions = {
 
             await client.close();
 
-            console.log(result);
+            // console.log(result);
 
             return result;
         } catch (err) {

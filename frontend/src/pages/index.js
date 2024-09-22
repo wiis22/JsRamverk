@@ -32,8 +32,7 @@ export default function Home() {
                 },
                 body: JSON.stringify(data)
             });
-            
-            // här ska det in en redirect till routen /doc/{id}. id ska vara 'response' direkt ovan
+
             if (!response.ok) {
                 throw new Error(`HTTP error, status ${response.status}`);
             }
@@ -56,7 +55,7 @@ export default function Home() {
                         <p>Det finns inga dokument, skapa ett?</p>
                     ) : (
                         docs.map((doc) => (
-                            <div className='doc-in-list' key={doc.id}>
+                            <div className='doc-in-list' key={doc._id}>
                                 <p className='doc-in-list-title'>{doc.title}</p>
                             </div>
                             ))
