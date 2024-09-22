@@ -1,17 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-// import Home from './components/Home.js';
-import Doc from './components/Doc.js';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout.js';
+import Home from './pages/index.js';
+import Doc from './pages/Doc.js';
 
 function App() {
     return (
         <Router>
             <Layout className="App">
-                <Switch>
-                    <Route path="/" exact component={Home} />
-                    <Route path="/doc/:id" component={Doc} />
+                <Routes> 
+                    <Route path="/" element={<Home />} />
+                    <Route path="/doc/:id" element={<Doc />} />
                     {/* Other routes hello */}
-                </Switch>
+                </Routes>
             </Layout>
         </Router>
     );
