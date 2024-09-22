@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-const port = process.env.PORT;
+const port = process.env.PORT_API;
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -48,13 +48,13 @@ app.post("/api/new-doc", async (req, res) => {
         content: "" 
     };
     
-    const result = await dbFunctions.addOne("documents", data);
+    const result = await dbFunctions.addOne("documents", data); //back from addOne will be the id
 
     if (!result) {
         return res.status(404).json({ error: 'No returned id when trying to add new document' });
     }
 
-    return res.redirect(`/${result}`); // we can't use any express redirects to keep it SPA
+    res.json(result); 
 });
 
 app.get('/api/:id', async (req, res) => {

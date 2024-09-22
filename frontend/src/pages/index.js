@@ -10,7 +10,7 @@ export default function Home() {
 
     useEffect(() => {
         const fetchDocs = async () => {
-            const response = await fetch('http://localhost:3001/api/get-all-docs');
+            const response = await fetch('http://localhost:4000/api/get-all-docs');
             const result = await response.json();
             setDocs(result);
         };
@@ -24,16 +24,27 @@ export default function Home() {
         const data = {
             title: newTitle
         };
+        try {
+            const response = await fetch('http://localhost:4000/api/new-doc', { // använder inte response nu men kan vara bra att göra en try catch
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            // här ska det in en redirect till routen /doc/{id}. id ska vara 'response' direkt ovan
+            if (!response.ok) {
+                throw new Error(`HTTP error, status ${response.status}`);
+            }
 
-        const response = await fetch('http://localhost:3001/api/new-doc', { // använder inte response nu men kan vara bra att göra en try catch
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        console.log(response)
-        // här ska det in en redirect till routen /doc/{id}. id ska vara 'response' direkt ovan
+            const result = await response.json();
+            console.log(result);
+            //redirect to rout /doc/{result} cuse you will get a id as response from new-doc if succes.
+            window.location.href = `/doc/${result}`;
+        } catch (err) {
+            console.error("Fetch error:", err)
+        }
     }
 
 

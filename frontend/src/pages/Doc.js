@@ -11,7 +11,7 @@ export default function Doc() {
     // Fetch document data based on id
     useEffect(() => {
         const fetchDocument = async () => {
-            const response = await fetch('http://localhost:3001/api/${id}');
+            const response = await fetch('http://localhost:4000/api/${id}');
             const result = await response.json();
             setTitle(result.title);
             setContent(result.content);
@@ -30,7 +30,7 @@ export default function Doc() {
             content
         };
 
-        const response = await fetch('http://localhost:3001/api/update', { // använder inte response nu men kan vara bra att göra en try catch
+        const response = await fetch('http://localhost:4000/api/update', { // använder inte response nu men kan vara bra att göra en try catch
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
