@@ -106,7 +106,7 @@ const dbFunctions = {
 
             await client.close();
 
-            console.log('result:', result);
+            // console.log('result:', result);
 
             return result;
         } catch (err) {

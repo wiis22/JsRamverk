@@ -56,7 +56,7 @@ export default function Home() {
                     ) : (
                         docs.map((doc) => (
                             <div className='doc-in-list' key={doc._id}>
-                                <p className='doc-in-list-title'>{doc.title}</p>
+                                <a href={`/doc/${doc._id}`}>{doc.title}</a>
                             </div>
                             ))
                     )}

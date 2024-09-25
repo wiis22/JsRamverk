@@ -67,10 +67,10 @@ app.get('/api/doc/:id', async (req, res) => {
 
         const result = await dbFunctions.getOne("documents", id);
         console.log(result);
-        
-        if (!result) {
-            return res.status(404).send('Document not found');
-        }
+
+        // if (!result) {
+        //     return res.status(404).send('Document not found');
+        // }
 
         res.json(result);
     } catch(error) {
@@ -82,7 +82,7 @@ app.get('/api/doc/:id', async (req, res) => {
 app.get('/api/get-all-docs', async (req, res) => {
     try {
         const result = await dbFunctions.getAll("documents");
-        // console.log("res:", result);
+        console.log("res:", result);
         res.json(result);
     } catch(error) {
         console.error('Error fetching documents:', error);
