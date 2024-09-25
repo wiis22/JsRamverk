@@ -1,26 +1,25 @@
 // src/components/Layout.js
+
 import React from "react";
 import { Link } from "react-router-dom";
+import Header from "./Header.js";
+import Footer from "./Footer.js";
 
 function Layout({ children }) {
     return (
-        <div>
-            <header>
-                <nav>
-                    <ul>
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/about">About</Link></li>
-                        <li><Link to="/contact">Contact</Link></li>
-                    </ul>
-                </nav>
-            </header>
+        <html>
+            <Header>
+
+            </Header>
+
             <main>
                 {children}
             </main>
-            <footer>
-                <p>Footer content goes here</p>
-            </footer>
-        </div>
+
+            <Footer>
+                
+            </Footer>
+        </html>
     );
 }
 
