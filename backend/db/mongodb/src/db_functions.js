@@ -88,15 +88,15 @@ const dbFunctions = {
      */
     getOne: async function getOne(colName, id) {
         try {
-            console.log('DSN:', dsn);
-            console.log('ID:', id)
+            // console.log('DSN:', dsn);
+            // console.log('ID:', id)
 
             if (typeof id !== 'string' && id >= 24) {
                 throw new error("ID most be a string in hexadecimal form");
             }
 
             const objectId = new ObjectId(id);
-            console.log('objectId', objectId);
+            // console.log('objectId', objectId);
 
             const client  = await mongo.connect(dsn);
             const db = await client.db();
@@ -130,10 +130,10 @@ const dbFunctions = {
     updateOneDoc: async function updateOneDoc(colName, data) {
         try {
 
-            console.log('DSN:', dsn);
-            console.log('ID:', data.id);
-            console.log('Title:', data.title);
-            console.log('Content:', data.content);
+            // console.log('DSN:', dsn);
+            // console.log('ID:', data.id);
+            // console.log('Title:', data.title);
+            // console.log('Content:', data.content);
 
             if (!ObjectId.isValid(String(data.id))) {
                 throw new Error("ID format is not valid");
@@ -141,7 +141,7 @@ const dbFunctions = {
             // ObjectId: Needs to be super sure
             // that id is in a correct format else it wont work.
             const objectId = new ObjectId(String(data.id));
-            console.log('objectId', objectId);
+            // console.log('objectId', objectId);
 
             const client  = await mongo.connect(dsn);
             const db = await client.db();
@@ -154,7 +154,7 @@ const dbFunctions = {
 
             await client.close();
 
-            console.log('result:', result);
+            // console.log('result:', result);
 
             return result;
 

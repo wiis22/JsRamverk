@@ -1,10 +1,12 @@
 // src/pages/Doc.js
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
+// import { useParams } from 'react-router-dom';
 
 export default function Doc() {
-    const { id } = useParams();
+    const router = useRouter();
+    const { id } = router.query
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
@@ -15,6 +17,8 @@ export default function Doc() {
 
             const response = await fetch(`http://localhost:4000/api/doc/${id}`); //bytte från '' till `` så id skickas korrekt
             const result = await response.json();
+            console.log(response);
+
             setTitle(result.title);
             setContent(result.content);
         };
@@ -40,6 +44,13 @@ export default function Doc() {
             body: JSON.stringify(data)
         });
     }
+
+    // return (
+    //     <div>
+    //         <h1>{title}</h1>
+    //         <p>{content}</p>
+    //     </div>
+    // )
 
     return (
         <div>
