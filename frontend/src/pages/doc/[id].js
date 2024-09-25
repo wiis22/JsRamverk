@@ -22,8 +22,10 @@ export default function Doc() {
             setTitle(result.title);
             setContent(result.content);
         };
-        if (id != undefined)
+    
+        if (id != undefined) {
             fetchDocument();
+        }
     }, [id]); // the id part on this row is for if the id parameter in the URL changes, this runs again
         //behöver en try typ om inte id finns
 
@@ -44,13 +46,6 @@ export default function Doc() {
             body: JSON.stringify(data)
         });
     }
-
-    // return (
-    //     <div>
-    //         <h1>{title}</h1>
-    //         <p>{content}</p>
-    //     </div>
-    // )
 
     return (
         <div>
