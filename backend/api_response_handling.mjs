@@ -35,11 +35,14 @@ app.post("/api/update", async (req, res) => {
         content: req.body.content
     };
 
+    // console.log("data in api:", data);
+    
+
     const id = await dbFunctions.updateOneDoc("documents",data);
 
-    const result = await dbFunctions.getOne("documents", id);
+    // const result = await dbFunctions.getOne("documents", id);
 
-    res.json(result); // need to check here if this works and what the format of the id is
+    res.json(id); // need to check here if this works and what the format of the id is
 });
 
 app.post("/api/new-doc", async (req, res) => {
@@ -66,7 +69,7 @@ app.get('/api/doc/:id', async (req, res) => {
         }
 
         const result = await dbFunctions.getOne("documents", id);
-        console.log(result);
+        // console.log(result);
 
         // if (!result) {
         //     return res.status(404).send('Document not found');
@@ -82,7 +85,7 @@ app.get('/api/doc/:id', async (req, res) => {
 app.get('/api/get-all-docs', async (req, res) => {
     try {
         const result = await dbFunctions.getAll("documents");
-        console.log("res:", result);
+        // console.log("res:", result);
         res.json(result);
     } catch(error) {
         console.error('Error fetching documents:', error);

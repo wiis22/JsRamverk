@@ -38,7 +38,7 @@ export default function Home() {
             }
 
             const result = await response.json();
-            console.log(result);
+            // console.log(result);
             //redirect to rout /doc/{result} cuse you will get a id as response from new-doc if succes.
             window.location.href = `/doc/${result}`;
         } catch (err) {
