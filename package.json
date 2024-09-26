@@ -4,7 +4,7 @@
   "description": "Starter project for DV1677 JSRamverk",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nyc mocha 'backend/tests/**/*.*js' 'frontend/tests/**/*.*js'",
     "dev": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend",
     "startNext": "npm run start --prefix frontend",
@@ -16,6 +16,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/register": "^7.24.6",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
@@ -34,9 +37,26 @@
     "@babel/preset-env": "^7.25.4",
     "@babel/preset-react": "^7.24.7",
     "babel-loader": "^9.2.1",
+    "chai": "^5.1.1",
+    "chai-http": "^5.0.0",
     "concurrently": "^9.0.1",
+    "mocha": "^10.7.3",
+    "nyc": "^17.1.0",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
+  },
+  "nyc": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "include": [
+      "backend/**/*.js",
+      "frontend/**/*.js"
+    ],
+    "exclude": [
+      "**/*.test.js"
+    ]
   }
 }
