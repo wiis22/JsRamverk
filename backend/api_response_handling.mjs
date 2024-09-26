@@ -9,6 +9,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import dbFunctions from "./db/mongodb/src/db_functions.js";
+import { log } from 'console';
 
 const app = express();
 
@@ -93,6 +94,7 @@ app.get('/api/get-all-docs', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-});
+
+const server = app.listen(port, () => console.log(`Example app listening on port ${port}`));
+// export of server is for testing
+export default server;
