@@ -1,4 +1,4 @@
-// src/pages/Doc.js
+// src/pages/{id}.js
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -15,14 +15,14 @@ export default function Doc() {
         const fetchDocument = async () => {
             console.log(id);
 
-            const response = await fetch(`http://localhost:4000/api/doc/${id}`); //bytte från '' till `` så id skickas korrekt
+            const response = await fetch(`http://localhost:4000/api/doc/${id}`);
             const result = await response.json();
             console.log(response);
 
             setTitle(result.title);
             setContent(result.content);
         };
-    
+
         if (id != undefined) {
             fetchDocument();
         }
