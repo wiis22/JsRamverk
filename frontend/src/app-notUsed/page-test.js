@@ -1,14 +1,13 @@
-// src/pages/Home.js
+// src/app/page.js
+"use client";
 
 import React, { useEffect, useState } from 'react';
-// import { useHistory } from "react-router-dom";
-// import { useRouter } from 'next/router';
-import RedirectComp from '@/components/RedirectDocId';
+import { useRouter } from 'next/navigation';
+// import RedirectComp from '@/components/Redirect.js';
 // import { useParams } from 'react-router-dom';
 
 export default function Home() {
-    // let history = useHistory();
-    // const router = useRouter();
+    const router = useRouter();
     const [newTitle, setNewTitle] = useState('');
     const [docs, setDocs] = useState([]);
     const [newDocId, setNewDocId] = useState(null);
@@ -29,6 +28,7 @@ export default function Home() {
         const data = {
             title: newTitle
         };
+
         try {
             const response = await fetch('http://localhost:4000/api/new-doc', {
                 method: 'POST',
@@ -45,10 +45,9 @@ export default function Home() {
             const newDocId = await response.json();
 
             console.log("redirecting to /doc/" + newDocId);
-            // return redirect(`/doc/${newDocId}`);
-            setNewDocId(newDocId);
-            // history.push(`/doc/${newDocId}`) // denna redirect fungerar ej. problemet är att history får tyldigen inte skapas pga att det inte verkar vara inuti en routing ellet nåt. har testat flera andra redirects. den gamla var inte SPA.
 
+            setNewDocId(newDocId);
+            router.push(`/doc/${newDocId}`);
         } catch (err) {
             console.error("Fetch error:", err)
         }
@@ -58,7 +57,7 @@ export default function Home() {
     return (
         <div className='home'>
             {newDocId ? (
-                <RedirectComp newDocId={newDocId} />
+                <div>Throbbing .... </div>
             ) : (
                 <div>
                     <div className='docs-list'>
@@ -67,8 +66,8 @@ export default function Home() {
                                 <p>Det finns inga dokument, skapa ett?</p>
                             ) : (
                                 docs.map((doc) => (
-                                    <div className='doc-in-list' key={doc._id} onClick={() => setNewDocId(doc._id)} style={{ cursor: "pointer" }}>
-                                        <a>Title: {doc.title} - Doc ID: {doc._id}</a>
+                                    <div className='doc-in-list' key={doc._id}>
+                                        <a href={`/doc/${doc._id}`}>Title: {doc.title} - Doc ID: {doc._id}</a>
                                     </div>
                                     ))
                             )}
@@ -80,7 +79,7 @@ export default function Home() {
                                 Skapa nytt dokument:
                                 <input type="text"
                                     value={newTitle}
-                                    onChange={(e) => setNewTitle(e.target.value)}
+                                    onChange={(e) => setNewTitle(e.target.value)}//kan behövas ses över 'auth' of 'e' as it is undefined.
                                 />
                             </label>
                             <button type="submit">Skapa dokument</button>

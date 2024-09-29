@@ -13,11 +13,11 @@ export default function Doc() {
     // Fetch document data based on id
     useEffect(() => {
         const fetchDocument = async () => {
-            console.log(id);
+            // console.log(id);
 
             const response = await fetch(`http://localhost:4000/api/doc/${id}`);
             const result = await response.json();
-            console.log(response);
+            // console.log(response);
 
             setTitle(result.title);
             setContent(result.content);

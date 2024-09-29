@@ -1,15 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout.js';
-import Home from './pages/index.js';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';//finns ej
+// import Layout from './components/Layout.js';
+import Layout from './components/layout.js/index.js';
+import Home from './pages/index.js/index.js';
 import Id from './pages/doc/[id].js';
 
 function App() {
     return (
         <Router>
             <Layout className="App">
-                <Routes> 
+                <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/doc/:id" element={<Id />} />
                     {/* Other routes */}
