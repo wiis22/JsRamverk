@@ -4,7 +4,7 @@
   "description": "Starter project for DV1677 JSRamverk",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha 'backend/tests/**/*.*js' 'frontend/tests/**/*.*js'",
+    "test": "nyc mocha --exit 'backend/tests/**/*.*js' 'frontend/tests/**/*.*js'",
     "dev": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend",
     "startNext": "npm run start --prefix frontend",

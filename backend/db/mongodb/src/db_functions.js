@@ -57,10 +57,16 @@ const dbFunctions = {
             // console.log('DSN:', dsn);
             const client  = await mongo.connect(dsn);
             const db = await client.db();
+
+            // check if the collection exist
+            const collections = await db.listCollections().toArray();
+            const collectionNames = collections.map(col => col.name);
+
+            if (!collectionNames.includes(colName)) {
+                throw new Error("Collection does not exist");
+            }
+
             const col = await db.collection(colName);
-
-            // sould make it so only id and title get put therw
-
             const result = await col.find().toArray();
 
             await client.close();
@@ -70,6 +76,10 @@ const dbFunctions = {
             return result;
         } catch (err) {
             console.log(err);
+            if (err.message == "Collection does not exist") {
+                throw err;
+            }
+
             throw new Error("Error retriving the documents");
         }
     },
@@ -91,8 +101,17 @@ const dbFunctions = {
             // console.log('DSN:', dsn);
             // console.log('ID:', id)
 
-            if (typeof id !== 'string' && id >= 24) {
-                throw new error("ID most be a string in hexadecimal form");
+            console.log(id)
+            console.log("id is string: " + typeof id == 'string')
+            console.log("id is len 24: " + id.length == 24)
+            console.log("id is int: " + Number.isInteger(id))
+            console.log(id instanceof ObjectId)
+
+            // throw error if id is not any of the following formats:
+            // string of length 24, integer or ObjectId
+            if (!((typeof id == 'string' && id.length == 24)
+                || Number.isInteger(id) || id instanceof ObjectId)) {
+                throw new Error("Error: id has invalid format");
             }
 
             const objectId = new ObjectId(id);
@@ -111,6 +130,10 @@ const dbFunctions = {
             return result;
         } catch (err) {
             console.log(err);
+            if (err.message == "Error: id has invalid format") {
+                throw err;
+            }
+
             throw new Error("Error retriving the document");
         }
     },
