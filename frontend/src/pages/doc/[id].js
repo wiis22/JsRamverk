@@ -49,22 +49,19 @@ export default function Doc() {
 
     return (
         <div>
-            <form onSubmit={handleUpdate}>
-                <label>
-                    Title:
-                    <input type="text"
+            <form onSubmit={handleUpdate} className='new-doc'>
+                <label for="title">Title:</label>
+                <input className='doc-title textarea'
+                        type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
-                </label>
-                <label>
-                    Content:
-                    <textarea
+                <label>Content:</label>
+                <textarea className='doc-content textarea'
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                     />
-                </label>
-                <button type="submit">Update</button>
+                <button className="button" type="submit">Update</button>
             </form>
         </div>
     )

@@ -61,13 +61,13 @@ export default function Home() {
                 <RedirectComp newDocId={newDocId} />
             ) : (
                 <div>
-                    <div className='docs-list'>
+                    <div className='docs'>
                         <h2>Dokument</h2>
                             {docs.length === 0 ? (
                                 <p>Det finns inga dokument, skapa ett?</p>
                             ) : (
                                 docs.map((doc) => (
-                                    <div className='doc-in-list' key={doc._id} onClick={() => setNewDocId(doc._id)} style={{ cursor: "pointer" }}>
+                                    <div className='single-doc' key={doc._id} onClick={() => setNewDocId(doc._id)} style={{ cursor: "pointer" }}>
                                         <a>Title: {doc.title} - Doc ID: {doc._id}</a>
                                     </div>
                                     ))
@@ -76,14 +76,14 @@ export default function Home() {
 
                     <div className='new-doc'>
                         <form onSubmit={handleNewDocSubmit}>
-                            <label>
-                                Skapa nytt dokument:
-                                <input type="text"
+                            <label for="title">Skapa nytt dokument:</label>
+                            <input className='textarea'
+                                    type="text"
                                     value={newTitle}
+                                    placeholder='Titel'
                                     onChange={(e) => setNewTitle(e.target.value)}
                                 />
-                            </label>
-                            <button type="submit">Skapa dokument</button>
+                            <button className='new-doc-button' type="submit">Skapa dokument</button>
                         </form>
                     </div>
                 </div>

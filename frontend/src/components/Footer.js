@@ -6,7 +6,7 @@ import React from "react";
 export default function Footer() {
     return (
         <footer>
-            <p class="copyright">&copy; Wiktor Isaksson och Viktor Nordenberg</p>
+            <p className="copyright">&copy; Wiktor Isaksson och Viktor Nordenberg</p>
         </footer>
     )
 }
