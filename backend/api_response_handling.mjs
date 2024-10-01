@@ -8,7 +8,7 @@ import path from 'path';
 import morgan from 'morgan';
 import cors from 'cors';
 
-import dbFunctions from "./db/mongodb/src/db_functions.js";
+import dbFunctions from "./db/mongodb/src/database.js";
 import { log } from 'console';
 
 const app = express();
@@ -39,11 +39,11 @@ app.post("/api/update", async (req, res) => {
     // console.log("data in api:", data);
     
 
-    const id = await dbFunctions.updateOneDoc("documents",data);
+    const result = await dbFunctions.updateOneDoc("documents", data);
 
     // const result = await dbFunctions.getOne("documents", id);
 
-    res.json(id); // need to check here if this works and what the format of the id is
+    res.json(result); // result is info saying it went well or not
 });
 
 app.post("/api/new-doc", async (req, res) => {
@@ -86,7 +86,7 @@ app.get('/api/doc/:id', async (req, res) => {
 app.get('/api/get-all-docs', async (req, res) => {
     try {
         const result = await dbFunctions.getAll("documents");
-        // console.log("res:", result);
+        // console.log("res: ", result);
         res.json(result);
     } catch(error) {
         console.error('Error fetching documents:', error);

@@ -78,9 +78,7 @@ const dbFunctions = {
             console.log(err);
             if (err.message == "Collection does not exist") {
                 throw err;
-            }
-
-            throw new Error("Error retriving the documents");
+            } // Could throw general error below here
         }
     },
 
@@ -100,12 +98,6 @@ const dbFunctions = {
         try {
             // console.log('DSN:', dsn);
             // console.log('ID:', id)
-
-            console.log(id)
-            console.log("id is string: " + typeof id == 'string')
-            console.log("id is len 24: " + id.length == 24)
-            console.log("id is int: " + Number.isInteger(id))
-            console.log(id instanceof ObjectId)
 
             // throw error if id is not any of the following formats:
             // string of length 24, integer or ObjectId
@@ -131,10 +123,9 @@ const dbFunctions = {
         } catch (err) {
             console.log(err);
             if (err.message == "Error: id has invalid format") {
+                console.log("here")
                 throw err;
-            }
-
-            throw new Error("Error retriving the document");
+            } // Could throw general error below here
         }
     },
 

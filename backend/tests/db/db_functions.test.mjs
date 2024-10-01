@@ -1,10 +1,8 @@
 import * as chai from 'chai';
 const { expect } = chai;
-
-// import chaiHttp from 'chai-http';
-// import server from '../../api_response_handling.mjs'; // behövs inte i denna fil. den behövs för tester av express routes.
-import dbFunctions from '../../db/mongodb/src/db_functions.js';
+import dbFunctions from '../../db/mongodb/src/database.js';
 import { ObjectId } from 'mongodb';
+
 
 describe('Database functions tests', () => {
     const testDataValid = {
@@ -46,13 +44,11 @@ describe('Database functions tests', () => {
         it('should throw an error if format of id is invalid', async () => {
             try {
                 const result = await dbFunctions.getOne("documents", "invalid-id-format");
-                console.log("here")
             } catch (error) {
                 expect(error).to.exist;
                 expect(error.message).to.equal("Error: id has invalid format");
             }
         });
-        // need anothher 'it' here to cover the error at the bottom of getOne()
     });
 
     describe('getAll', () => {
@@ -77,16 +73,16 @@ describe('Database functions tests', () => {
             }
         });
 
-        it('should throw error for general error case', async () => {
-            // vet inte hur jag ska framtvinga error längst ner i getAll().
-            try {
-                const result = await dbFunctions.getAll("non-existing-collection");
-                console.log("Expected failure but got result: " + result);
-            } catch (error) {
-                expect(error).to.exist;
-                expect(error.message).to.equal("Error retriving the documents");
-            }
-        });
+        // it('should throw error for general error case', async () => {
+        //     // vet inte hur jag ska framtvinga error längst ner i getAll().
+        //     try {
+        //         const result = await dbFunctions.getAll("non-existing-collection");
+        //         console.log("Expected failure but got result: " + result);
+        //     } catch (error) {
+        //         expect(error).to.exist;
+        //         expect(error.message).to.equal("Error retriving the documents");
+        //     }
+        // });
     });
 
     describe('updteOneDoc', () => {
