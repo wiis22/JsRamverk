@@ -1,15 +1,13 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
-const port = process.env.PORT_API;
+const port = process.env.PORT_API || 1337;
 
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import morgan from 'morgan';
 import cors from 'cors';
-
 import dbFunctions from "./db/mongodb/src/database.js";
-import { log } from 'console';
 
 const app = express();
 

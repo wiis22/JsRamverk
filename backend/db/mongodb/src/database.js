@@ -3,10 +3,12 @@
  */
 "use strict";
 
+require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 const { MongoClient, ObjectId } = require("mongodb"); 
-
-const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
+let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
+console.log("dsn: " + dsn)
+// const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
 const fs = require("fs");
 const path = require("path");
@@ -61,6 +63,9 @@ const dbFunctions = {
             // check if the collection exist
             const collections = await db.listCollections().toArray();
             const collectionNames = collections.map(col => col.name);
+
+            console.log("collectionNames:")
+            console.log(collectionNames);
 
             if (!collectionNames.includes(colName)) {
                 throw new Error("Collection does not exist");
@@ -123,7 +128,6 @@ const dbFunctions = {
         } catch (err) {
             console.log(err);
             if (err.message == "Error: id has invalid format") {
-                console.log("here")
                 throw err;
             } // Could throw general error below here
         }

@@ -3,8 +3,11 @@
  */
 "use strict";
 
+require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
-const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
+// const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
+let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
+console.log("dsn: " + dsn)
 
 const fs = require("fs");
 const path = require("path");
@@ -17,16 +20,12 @@ resetCollection(dsn, "documents")
 
 
 /**
- * Reset a collection by removing existing content and insert a default
- * set of documents.
+ * Reset a collection by removing existing content.
  *
  * @async
  *
  * @param {string} dsn     DSN to connect to database.
  * @param {string} colName Name of collection.
- * @param {string} doc     Documents to be inserted into collection.
- *
- * @throws Error when database operation fails.
  *
  * @return {Promise<void>} Void
  */
