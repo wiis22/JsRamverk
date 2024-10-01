@@ -3,7 +3,6 @@ process.env.NODE_ENV = 'test';
 import { use, expect } from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../../api_response_handling.mjs';
-import { ObjectId } from 'mongodb';
 
 const chai = use(chaiHttp);
 const request = chai.request.execute;
@@ -86,7 +85,6 @@ describe('Express API routes tests', () => {
 
     // /update
     describe('Post /api/update', () => {
-
         it('200 HAPPY PATH', async () => {
             const updateDocData = {
                 id: newId,
