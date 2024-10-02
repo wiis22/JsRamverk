@@ -30,6 +30,7 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
 
     - run: npm install
+
     - run: npm test
       env:
         ATLAS_USERNAME: ${{ secrets.ATLAS_USERNAME }}
