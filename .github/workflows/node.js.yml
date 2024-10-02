@@ -31,3 +31,6 @@ jobs:
 
     - run: npm install
     - run: npm test
+      env:
+        ATLAS_USERNAME: ${{ secrets.ATLAS_USERNAME }}
+        ATLAS_PASSWORD: ${{ secrets.ATLAS_PASSWORD }}
