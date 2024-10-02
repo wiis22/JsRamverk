@@ -6,7 +6,7 @@
 require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 const { MongoClient, ObjectId } = require("mongodb"); 
-let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0` || "mongodb://localhost:27017/texteditor";
+let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
 console.log("dsn: " + dsn)
 // const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
@@ -40,6 +40,34 @@ const dbFunctions = {
 
         return result.insertedId; //tock away the .tostring().
         // As it allready gets converted to sting in the index.ejs.
+    },
+
+
+    /**
+     * Remove one into the collection
+     *
+     * @async
+     *
+     * @param {string} colName  Name of collection.
+     * @param {string} id       Id to be Removed into Db.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {object} Return info about the operation.
+     */
+    deleteOne: async function deleteOne(colName, id) {
+        console.log('DSN:', dsn);
+        const client  = await mongo.connect(dsn);
+        const db = await client.db();
+        const col = await db.collection(colName);
+        const data = {
+            _id: new ObjectId(String(id))
+        };
+        const result = await col.deleteOne(data);
+
+        await client.close();
+
+        return result;
     },
 
     /**

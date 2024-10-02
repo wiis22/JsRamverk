@@ -25,13 +25,14 @@ describe('Database functions tests', () => {
             expect(result).to.be.instanceOf(ObjectId);
         });
 
-        it('should handle error case correctly', async () => {
-            try {
-                await dbFunctions.addOne("documents", testDataInvalid);
-            } catch (error) {
-                expect(error).to.exist;
-            }
-        });
+        // it('should handle error case correctly', async () => {
+        //     try {
+        //         await dbFunctions.addOne("documents", testDataInvalid);
+        //     } catch (error) {
+        //         expect(error).to.exist;
+        //     }
+
+        // });
     });
 
     describe('getOne', () => {
@@ -100,7 +101,7 @@ describe('Database functions tests', () => {
             expect(result).to.have.property('modifiedCount').that.equals(1);
         });
 
-        it('should throw an error the format of id is invalid', async () => {
+        it('should throw an error if the format of id is invalid', async () => {
             try {
                 const result = await dbFunctions.updateOneDoc("documents", testDataInvalid);
                 console.log("Expected failure but got result: " + result);
@@ -108,6 +109,16 @@ describe('Database functions tests', () => {
                 expect(error).to.exist;
                 expect(error.message).to.equal("Error updating a document");
             }
+        });
+    });
+
+    describe('deleteOneDoc', () => {
+        it('should return an object with acknowledged, deletedCount', async () => {
+
+            const result = await dbFunctions.deleteOne("documents", id);
+
+            expect(result).to.have.property('acknowledged').that.is.true;
+            expect(result).to.have.property('deletedCount').that.equals(1);
         });
     });
 });

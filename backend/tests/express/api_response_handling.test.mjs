@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 import { use, expect } from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../../api_response_handling.mjs';
+import dbFunctions from '../../db/mongodb/src/database.js';
 
 const chai = use(chaiHttp);
 const request = chai.request.execute;
@@ -10,7 +11,7 @@ const request = chai.request.execute;
 
 describe('Express API routes tests', () => {
     const newDocData = {
-        title: "new-doc-title"
+        title: "doc-title"
     };
     let newId;
 
@@ -56,8 +57,11 @@ describe('Express API routes tests', () => {
                 .post("/api/new-doc")
                 .send(newDocData);
 
+
             expect(res.body).to.be.a("string");
             expect(res.body.length).to.equal(24);
+
+            await dbFunctions.deleteOne("documents", res.body);
         });
     });
 
@@ -112,6 +116,7 @@ describe('Express API routes tests', () => {
 
             expect(res.body).to.have.property("acknowledged");
             expect(res.body.acknowledged).to.equal(true);
+            await dbFunctions.deleteOne("documents", newId);
         });
     });
 });
