@@ -113,7 +113,7 @@ describe('Database functions tests', () => {
     });
 
     describe('deleteOneDoc', () => {
-        it('should return an object with acknowledged, deletedCount', async () => {
+        it('should return an object with acknowledged, deletedCount.', async () => {
 
             const result = await dbFunctions.deleteOne("documents", id);
 
