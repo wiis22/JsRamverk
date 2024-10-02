@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-const port = process.env.PORT_API || 1337;
+
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -10,6 +10,7 @@ import cors from 'cors';
 import dbFunctions from "./db/mongodb/src/database.js";
 
 const app = express();
+const port = process.env.PORT || 1337;
 
 app.disable('x-powered-by');
 app.use(cors());

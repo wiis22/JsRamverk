@@ -6,11 +6,11 @@
   "scripts": {
     "test": "nyc mocha --exit 'backend/tests/**/*.*js' 'frontend/tests/**/*.*js'",
     "dev": "npm run dev --prefix frontend",
-    "build": "npm run build --prefix frontend",
-    "startNext": "npm run start --prefix frontend",
-    "startExpress": "node ./backend/api_response_handling.mjs",
+    "buildNext": "npm run buildNext --prefix frontend",
+    "startNext": "npm run startNext --prefix frontend",
+    "start": "node ./backend/api_response_handling.mjs",
     "lint": "npm run lint --prefix frontend",
-    "start": "concurrently \"npm run startExpress\" \"npm run dev\""
+    "startDev": "concurrently \"npm run start\" \"npm run dev\""
   },
   "keywords": [],
   "author": "",
