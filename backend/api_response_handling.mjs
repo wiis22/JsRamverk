@@ -8,6 +8,9 @@ import path from 'path';
 import morgan from 'morgan';
 import cors from 'cors';
 import dbFunctions from "./db/mongodb/src/database.js";
+import auth from "./auth/auth.js";
+
+import jwt from 'jsonwebtoken';
 
 const app = express();
 const port = process.env.PORT || 1337;
@@ -27,6 +30,29 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get("/api/verify-logged-in", async (req, res) => {
+    const data = {
+        loggedIn: false
+    };
+
+    const jwtToken = req.headers['x-access-token'];
+
+    const result = auth.verifyToken(jwtToken);
+
+    res.json(data);
+});
+
+app.post("/api/login", async (req, res) => {
+    const loginData = {
+        email: req.body.email,
+        password: req.body.password
+    };
+
+    const result = auth.login(loginData);
+
+    res.json(result);
+});
 
 app.post("/api/update", async (req, res) => {
     const data = {

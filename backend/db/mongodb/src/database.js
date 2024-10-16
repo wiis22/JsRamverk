@@ -92,9 +92,6 @@ const dbFunctions = {
             const collections = await db.listCollections().toArray();
             const collectionNames = collections.map(col => col.name);
 
-            console.log("collectionNames:")
-            console.log(collectionNames);
-
             if (!collectionNames.includes(colName)) {
                 throw new Error("Collection does not exist");
             }
@@ -116,7 +113,7 @@ const dbFunctions = {
     },
 
     /**
-     * Insert one into the collection
+     * Get one document from a collection in the database based on id.
      *
      * @async
      *
@@ -158,6 +155,37 @@ const dbFunctions = {
             if (err.message == "Error: id has invalid format") {
                 throw err;
             } // Could throw general error below here
+        }
+    },
+
+    /**
+     * Get one user from a users collection based on email.
+     *
+     * @async
+     *
+     * @param {string} colName Name of collection.
+     * @param {string} id    The id hexadecimal format to find in the db.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {Object|null} The result in JSON format
+     */
+    getOne: async function getOneUser(email) {
+        try {
+            const client  = await mongo.connect(dsn);
+            const db = await client.db();
+            const col = await db.collection("users");
+
+            const result = await col.findOne({ email: email });
+
+            await client.close();
+
+            // console.log('result:', result);
+
+            return result;
+        } catch (err) {
+            console.log(err);
+            throw error("Couldn't find user data based on email:" + email);
         }
     },
 

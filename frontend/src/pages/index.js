@@ -2,14 +2,37 @@
 
 import React, { useEffect, useState } from 'react';
 // import { useHistory } from "react-router-dom";
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import RedirectComp from '@/components/Redirect.js';
 
 // import { useParams } from 'react-router-dom';
 
 export default function Home() {
-    // let history = useHistory();
-    // const router = useRouter();
+    const router = useRouter();
+
+    const loggedIn = async () => {
+        const token = sessionstorage.getItem('token') // window object doesn't exist, maybe.
+
+        if (token) {
+            const response = await fetch('http://localhost:1337/api/verify-logged-in', {
+                method: 'GET',
+                headers: {
+                    'x-access-token': token
+                }
+            });
+            const result = await response.json();
+
+            if (!result.loggedIn) {
+                router.push("/login");
+            }
+        } else {
+            router.push("/login");
+        }
+    };
+
+    loggedIn();
+
+
     const [newTitle, setNewTitle] = useState('');
     const [docs, setDocs] = useState([]);
     const [newDocId, setNewDocId] = useState(null);
