@@ -4,12 +4,12 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-const RedirectComp = ({ newDocId }) => {
+const RedirectComp = ({ route }) => {
     const router = useRouter();
 
     useEffect(() => {
-        router.push(`/doc/${newDocId}`)
-    }, [newDocId, router]);
+        router.push(`${route}`)
+    }, [route, router]);
 
     return <div>Throbbing .... </div>
 };

@@ -12,8 +12,8 @@ export default function Header() {
                 </div>
                 <div className="nav">
                     <a className="nav-rout" onClick={() => router.push("/")}>Home</a>
-                    {/* <a className="nav-rout" onClick={() => router.push("/")}>Home</a>
-                    <a className="nav-rout" onClick={() => router.push("/")}>Home</a> */}
+                    <a className="nav-rout" onClick={() => router.push("/login")}>Login</a>
+                    {/* <a className="nav-rout" onClick={() => router.push("/")}>Home</a> */}
                 </div>
         </header>
 

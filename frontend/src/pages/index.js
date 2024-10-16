@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 // import { useHistory } from "react-router-dom";
 // import { useRouter } from 'next/router';
-import RedirectComp from '@/components/RedirectDocId';
+import RedirectComp from '@/components/Redirect.js';
 
 // import { useParams } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ export default function Home() {
     const [newTitle, setNewTitle] = useState('');
     const [docs, setDocs] = useState([]);
     const [newDocId, setNewDocId] = useState(null);
+    const [routeNewDoc, setRouteNewDoc] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
 
     useEffect(() => {
@@ -49,6 +50,7 @@ export default function Home() {
 
             console.log("redirecting to /doc/" + newDocId);
             // return redirect(`/doc/${newDocId}`);
+            setRouteNewDoc(`/doc/${newDocId}`);
             setNewDocId(newDocId);
             // history.push(`/doc/${newDocId}`) // denna redirect fungerar ej. problemet är att history får tyldigen inte skapas pga att det inte verkar vara inuti en routing ellet nåt. har testat flera andra redirects. den gamla var inte SPA.
 
@@ -61,7 +63,7 @@ export default function Home() {
     return (
         <div className='home'>
             {newDocId ? (
-                <RedirectComp newDocId={newDocId} />
+                <RedirectComp route={routeNewDoc} />
             ) : (
                 <div>
                     <div className='docs'>
@@ -70,7 +72,10 @@ export default function Home() {
                                 <p>Det finns inga dokument, skapa ett?</p>
                             ) : (
                                 docs.map((doc) => (
-                                    <div className='single-doc' key={doc._id} onClick={() => setNewDocId(doc._id)}>
+                                    <div className='single-doc' key={doc._id} onClick={() => {
+                                        setRouteNewDoc(`/doc/${doc._id}`);
+                                        setNewDocId(doc._id)
+                                        }}>
                                         <a>{doc.title}</a>
                                     </div>
                                     ))
