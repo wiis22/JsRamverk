@@ -36,7 +36,7 @@ app.post("/api/update", async (req, res) => {
     };
 
     // console.log("data in api:", data);
-    
+
 
     const result = await dbFunctions.updateOneDoc("documents", data);
 
@@ -48,16 +48,16 @@ app.post("/api/update", async (req, res) => {
 app.post("/api/new-doc", async (req, res) => {
     const data = {
         title: req.body.title,
-        content: "" 
+        content: ""
     };
-    
+
     const result = await dbFunctions.addOne("documents", data); //back from addOne will be the id
 
     if (!result) {
         return res.status(404).json({ error: 'No returned id when trying to add new document' });
     }
 
-    res.json(result); 
+    res.json(result);
 });
 
 app.get('/api/doc/:id', async (req, res) => {
