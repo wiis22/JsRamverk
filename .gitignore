@@ -1,6 +1,6 @@
+.vscode/
 node_modules/
 .env
 ssr-editor-1.0/
 .nyc_output/
-.vscode/
 coverage/
