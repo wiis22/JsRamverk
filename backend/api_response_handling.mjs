@@ -19,7 +19,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(process.cwd(), "public")));
 
 // don't show the log when it is test
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test') { 
     // use morgan to log at command line
     app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 }
