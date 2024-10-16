@@ -139,7 +139,7 @@ footer {
 
 .doc-content {
     resize: vertical;
-    min-height: 10rem;
+    min-height: 25rem;
 }
 
 .whole-page {

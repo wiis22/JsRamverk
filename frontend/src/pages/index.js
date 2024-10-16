@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // import { useHistory } from "react-router-dom";
 // import { useRouter } from 'next/router';
 import RedirectComp from '@/components/RedirectDocId';
+
 // import { useParams } from 'react-router-dom';
 
 export default function Home() {
@@ -12,10 +13,11 @@ export default function Home() {
     const [newTitle, setNewTitle] = useState('');
     const [docs, setDocs] = useState([]);
     const [newDocId, setNewDocId] = useState(null);
+    const [isSubmitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         const fetchDocs = async () => {
-            const response = await fetch('http://localhost:4000/api/get-all-docs');
+            const response = await fetch('https://wiis22.azurewebsites.net/api/get-all-docs');
             const result = await response.json();
             setDocs(result);
         };
@@ -26,11 +28,12 @@ export default function Home() {
     const handleNewDocSubmit = async (e) => {
         e.preventDefault();
 
+        setSubmitted(true);
         const data = {
             title: newTitle
         };
         try {
-            const response = await fetch('http://localhost:4000/api/new-doc', {
+            const response = await fetch('https://wiis22.azurewebsites.net/api/new-doc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,8 +70,8 @@ export default function Home() {
                                 <p>Det finns inga dokument, skapa ett?</p>
                             ) : (
                                 docs.map((doc) => (
-                                    <div className='single-doc' key={doc._id} onClick={() => setNewDocId(doc._id)} style={{ cursor: "pointer" }}>
-                                        <a>Title: {doc.title} - Doc ID: {doc._id}</a>
+                                    <div className='single-doc' key={doc._id} onClick={() => setNewDocId(doc._id)}>
+                                        <a>{doc.title}</a>
                                     </div>
                                     ))
                             )}
@@ -76,14 +79,15 @@ export default function Home() {
 
                     <div className='new-doc'>
                         <form onSubmit={handleNewDocSubmit}>
-                            <label for="title">Skapa nytt dokument:</label>
+                            <label>Skapa nytt dokument:</label>
                             <input className='textarea'
                                     type="text"
                                     value={newTitle}
                                     placeholder='Titel'
                                     onChange={(e) => setNewTitle(e.target.value)}
+                                    required
                                 />
-                            <button className='new-doc-button' type="submit">Skapa dokument</button>
+                            <button className='new-doc-button' type="submit" disabled={isSubmitted}>Skapa dokument</button>
                         </form>
                     </div>
                 </div>

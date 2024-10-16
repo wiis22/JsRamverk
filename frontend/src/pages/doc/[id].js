@@ -15,7 +15,7 @@ export default function Doc() {
         const fetchDocument = async () => {
             // console.log(id);
 
-            const response = await fetch(`http://localhost:4000/api/doc/${id}`);
+            const response = await fetch(`https://wiis22.azurewebsites.net/api/doc/${id}`);
             const result = await response.json();
             // console.log(response);
 
@@ -38,7 +38,7 @@ export default function Doc() {
             content
         };
 
-        const response = await fetch('http://localhost:4000/api/update', { // använder inte response nu men kan vara bra att göra en try catch
+        const response = await fetch('https://wiis22.azurewebsites.net/api/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,11 +50,12 @@ export default function Doc() {
     return (
         <div>
             <form onSubmit={handleUpdate} className='new-doc'>
-                <label for="title">Title:</label>
+                <label>Title:</label>
                 <input className='doc-title textarea'
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        required
                     />
                 <label>Content:</label>
                 <textarea className='doc-content textarea'

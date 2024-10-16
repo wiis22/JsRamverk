@@ -13,6 +13,9 @@ export default function RootLayout({
  }) {
     return (
             <div className="whole-page">
+                {/* <head>
+                    <title>TextEditor</title>
+                </head> */}
             <Header>
             </Header>
             

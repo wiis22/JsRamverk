@@ -42,6 +42,34 @@ const dbFunctions = {
         // As it allready gets converted to sting in the index.ejs.
     },
 
+
+    /**
+     * Remove one into the collection
+     *
+     * @async
+     *
+     * @param {string} colName  Name of collection.
+     * @param {string} id       Id to be Removed into Db.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {object} Return info about the operation.
+     */
+    deleteOne: async function deleteOne(colName, id) {
+        console.log('DSN:', dsn);
+        const client  = await mongo.connect(dsn);
+        const db = await client.db();
+        const col = await db.collection(colName);
+        const data = {
+            _id: new ObjectId(String(id))
+        };
+        const result = await col.deleteOne(data);
+
+        await client.close();
+
+        return result;
+    },
+
     /**
      * Insert one into the collection
      *

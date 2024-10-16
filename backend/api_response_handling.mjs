@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-const port = process.env.PORT_API || 1337;
+
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -10,6 +10,7 @@ import cors from 'cors';
 import dbFunctions from "./db/mongodb/src/database.js";
 
 const app = express();
+const port = process.env.PORT || 1337;
 
 app.disable('x-powered-by');
 app.use(cors());
@@ -94,5 +95,5 @@ app.get('/api/get-all-docs', async (req, res) => {
 
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}`));
-// export of server is for testing
+// export of server is for testing test
 export default server;

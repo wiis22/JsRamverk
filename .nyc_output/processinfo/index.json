@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"processes":{"3faa5123-4914-480d-8cdc-d664496c6796":{"parent":null,"children":[]}},"files":{"/mnt/c/xampp/htdocs/vinr/dbwebb-kurser/jsramverk/JsRamverk/backend/db/mongodb/src/database.js":["3faa5123-4914-480d-8cdc-d664496c6796"]},"externalIds":{}}
+=======
+{"processes":{"f3da3625-8617-4519-afc2-113bfe128f86":{"parent":null,"children":[]}},"files":{"/home/axaite/dbwebb-kurser/jsramverk/backend/db/mongodb/src/database.js":["f3da3625-8617-4519-afc2-113bfe128f86"]},"externalIds":{}}
+>>>>>>> a0965d8274dcfb60bc2c41183584b893c9476935
