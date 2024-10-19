@@ -41,7 +41,7 @@ export default function Register() {
                 throw new Error(`HTTP error, status ${response.status}`);
             }
             
-            // fix what will happen after register .... 
+            // fix what will happen after register ....  test
         } catch (err) {
             console.error("Fetch error:", err)
         }
