@@ -11,6 +11,7 @@ export default function Home() {
     const router = useRouter();
 
     const loggedIn = async () => {
+        // const token = sessionstorage.getItem('token')
         const [token, setToken] = useState(null);
 
         useEffect(() => {
@@ -23,7 +24,6 @@ export default function Home() {
             }
 
         }, []);
-
         if (token) {
             const response = await fetch('http://localhost:1337/api/verify-logged-in', {
                 method: 'GET',

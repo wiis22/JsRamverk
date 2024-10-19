@@ -54,6 +54,17 @@ app.post("/api/login", async (req, res) => {
     res.json(result);
 });
 
+app.post("/api/register", async (req, res) => {
+    const newUserData = {
+        email: req.body.email,
+        password: req.body.password
+    };
+
+    const result = auth.register(newUserData);
+
+    res.json(result);
+});
+
 app.post("/api/update", async (req, res) => {
     const data = {
         id: req.body.id,

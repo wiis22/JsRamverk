@@ -9,9 +9,9 @@ const auth = {
     },
     
     login: function(loginData) {
-        const userData = db.getOneUser(logindData.email);
+        const userData = db.getOneUser(loginData.email);
 
-        bcrypt.compare(logindData.password, userData.password, (err, result) => {
+        bcrypt.compare(loginData.password, userData.password, (err, result) => {
             if (err) {
                 return res.status(500).json({
                     errors: {
@@ -36,10 +36,6 @@ const auth = {
     },
 
     logout: function () {
-
-    },
-
-    comparePasswords: function () {
 
     },
 

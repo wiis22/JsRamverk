@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 // import { useHistory } from "react-router-dom";
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 // import RedirectComp from '@/components/RedirectDocId';
 
 // import { useParams } from 'react-router-dom';
 
 export default function Register() {
     // let history = useHistory();
-    // // const router = useRouter();
+    const router = useRouter();
     const [newUser, setNewUser] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPassword2, setNewPassword2] = useState('');
@@ -32,9 +32,9 @@ export default function Register() {
             return;
         }
 
-        const loginData = {
-            email: user,
-            password: password
+        const newUserData = {
+            email: newUser,
+            password: newPassword
         };
 
 
@@ -44,7 +44,7 @@ export default function Register() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(loginData)
+                body: JSON.stringify(newUserData)
             });
 
             if (!response.ok) {
@@ -52,6 +52,8 @@ export default function Register() {
             }
             
             // fix what will happen after register ....  test
+            router.push("/login")
+
         } catch (err) {
             console.error("Fetch error:", err)
         }
