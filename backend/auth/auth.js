@@ -7,40 +7,34 @@ const auth = {
     register: function (userData) {
         db.addOne(userData);
     },
-    
+
     login: function(loginData) {
-        const userData = db.getOneUser(logindData.email);
+        const userData = db.getOneUser(loginData.email);
 
-        bcrypt.compare(logindData.password, userData.password, (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    errors: {
-                        status: 500,
-                        source: "/login",
-                        title: "bcrypt error",
-                        detail: "bcrypt error"
-                    }
-                });
-            }
-        });
+        const res = this.comparePasswords(loginData.password, userData.password);
 
-        if (err) {
-            return false;
+        if (res) {     
+            const payload = { email: loginData.email };
+            const jwtSecret = process.env.JWT_SECRET;
+            const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
+
+            return jwtToken;
         }
 
-        const payload = { email: loginData.email };
-        const jwtSecret = process.env.JWT_SECRET;
-        const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
-
-        return jwtToken;
+        return res; // will be false
     },
 
     logout: function () {
-
+        
     },
 
-    comparePasswords: function () {
-
+    comparePasswords: function (enteredPassword, correctPasswordHash) {
+        bcrypt.compare(enteredPassword, correctPasswordHash, (err, result) => {
+            if (err) {
+                return false
+            }
+            return true;
+        });
     },
 
     verifyToken: function() {
@@ -54,4 +48,3 @@ const auth = {
 }
 
 module.exports = auth;
-

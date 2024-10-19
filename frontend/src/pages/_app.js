@@ -1,5 +1,5 @@
 // src/pages/_app.js
-import Layout from '../components/layout.js';
+import Layout from '../components/Layout.js';
 import '../styles/style.css'; // You can add your global CSS here
 
 function MyApp({ Component, pageProps }) {
