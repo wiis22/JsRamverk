@@ -1,4 +1,4 @@
-// src/pages/login.js
+// src/pages/register.js
 
 import React, { useEffect, useState } from 'react';
 // import { useHistory } from "react-router-dom";
@@ -7,26 +7,29 @@ import React, { useEffect, useState } from 'react';
 
 // import { useParams } from 'react-router-dom';
 
-export default function Login() {
+export default function Register() {
     // let history = useHistory();
     // // const router = useRouter();
-    const [user, setUser] = useState('');
-    const [password, setPassword] = useState('');
-    const [newDocId, setNewDocId] = useState(null);
-    const [newToken, setNewToken] = useState(null);
+    const [newUser, setNewUser] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [newPassword2, setNewPassword2] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
 
-    const handleLogin = async (e) => {
+    const handleNewRegister = async (e) => {
         e.preventDefault();
 
         setSubmitted(true);
+
+        // compare the two passwords before the register......
+
         const loginData = {
             email: user,
             password: password
         };
 
+
         try {
-            const response = await fetch('http://localhost:1337/api/login', {
+            const response = await fetch('http://localhost:1337/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,28 +40,11 @@ export default function Login() {
             if (!response.ok) {
                 throw new Error(`HTTP error, status ${response.status}`);
             }
-
-            const jwtToken = await response.json();
-
-            //set the jwt token to session storage.
-
-            console.log("redirecting to /home  the jwttoken: " + jwtToken);
-            // return redirect(`/doc/${newDocId}`);
-            setNewToken(jwtToken);
-            sessionStorage.setItem('token', jwtToken)
-
+            
+            // fix what will happen after register .... 
         } catch (err) {
-
-            //maby check what whent wrong like incorrect username/password.
             console.error("Fetch error:", err)
         }
-    }
-
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        router.push("/register");
-        //need to redirect to a /register
     }
 
 
@@ -66,18 +52,18 @@ export default function Login() {
         <div className='login'>
             <h1>Login</h1>
             {newToken ? (
-                <RedirectComp route={"/"} />
+                <RedirectComp route={"/login"} />
             ) : (
                 <div>
                     <div className='login-form'>
-                        <form onSubmit={handleLogin}>
+                        <form onSubmit={handleNewRegister}>
                             <div>
                             <label>Username: </label>
                             <input className='textarea'
                                     type="text"
-                                    value={user}
+                                    value={newUser}
                                     placeholder='email/username'
-                                    onChange={(e) => setUser(e.target.value)}
+                                    onChange={(e) => setNewUser(e.target.value)}
                                     required
                                 />
                             </div>
@@ -86,17 +72,25 @@ export default function Login() {
                             <label>Password: </label>
                             <input className='textarea'
                                     type="text"
-                                    value={password}
+                                    value={newPassword}
                                     placeholder='******'
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => setNewPassword(e.target.value)}
                                     required
                                 />
                             </div>
-                            <button className='new-doc-button' type="submit" disabled={isSubmitted}>Login</button>
+
+                            <div>
+                            <label>Confirm Password: </label>
+                            <input className='textarea'
+                                    type="text"
+                                    value={newPassword2}
+                                    placeholder='******'
+                                    onChange={(e) => setNewPassword2(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button className='new-doc-button' type="submit" disabled={isSubmitted}>register</button>
                         </form>
-                    </div>
-                    <div className='new-register'>
-                        <button className='new-doc-button' type="submit" onclick={handleRegister}>Register</button>
                     </div>
                 </div>
             )}
