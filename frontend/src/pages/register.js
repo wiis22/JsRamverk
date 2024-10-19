@@ -14,13 +14,23 @@ export default function Register() {
     const [newPassword, setNewPassword] = useState('');
     const [newPassword2, setNewPassword2] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('')
 
     const handleNewRegister = async (e) => {
         e.preventDefault();
-
         setSubmitted(true);
 
         // compare the two passwords before the register......
+
+        if (newPassword !== newPassword2) {
+            setErrorMessage("Password is not the same.")
+            setSubmitted(false);
+
+            setTimeout(() => {
+                setErrorMessage("")
+            }, 3000)
+            return;
+        }
 
         const loginData = {
             email: user,
@@ -49,11 +59,8 @@ export default function Register() {
 
 
     return (
-        <div className='login'>
-            <h1>Login</h1>
-            {newToken ? (
-                <RedirectComp route={"/login"} />
-            ) : (
+        <div className='register'>
+            <h1>Register</h1>
                 <div>
                     <div className='login-form'>
                         <form onSubmit={handleNewRegister}>
@@ -89,11 +96,13 @@ export default function Register() {
                                     required
                                 />
                             </div>
+
+                            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
                             <button className='new-doc-button' type="submit" disabled={isSubmitted}>register</button>
                         </form>
                     </div>
                 </div>
-            )}
         </div>
     );
 }
