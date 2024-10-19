@@ -4,22 +4,29 @@ const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 
 const auth = {
-    register: function (userData) {
-        db.addOne(userData);
+    register: async function (userData) {
+        // hash password here before using db.addOne()
+
+        const res = await db.addOne("users", userData);
+
+        return res;
     },
 
-    login: function(loginData) {
-        const userData = db.getOneUser(loginData.email);
+    login: async function(loginData) {
+        const userData = await db.getOneUser(loginData.email);
 
-        const res = this.comparePasswords(loginData.password, userData.password);
+        console.log("userData in auth.login:", userData)
+
+        const res = await this.comparePasswords(loginData.password, userData.password);
 
         if (res) {     
             const payload = { email: loginData.email };
-            const jwtSecret = process.env.JWT_SECRET;
             const jwtToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
 
             return jwtToken;
         }
+
+        console.log("res in auth.login:", res)
 
         return res; // will be false
     },
@@ -28,13 +35,18 @@ const auth = {
         
     },
 
-    comparePasswords: function (enteredPassword, correctPasswordHash) {
-        bcrypt.compare(enteredPassword, correctPasswordHash, (err, result) => {
+    comparePasswords: async function (enteredPassword, correctPasswordHash) {
+        console.log("arguments in comparePassword:")
+        console.log("enteredPassword", enteredPassword)
+        console.log("correctPasswordHash", correctPasswordHash)
+        const res = bcrypt.compare(enteredPassword, correctPasswordHash, (err, result) => {
             if (err) {
                 return false
             }
             return true;
         });
+
+        return res;
     },
 
     verifyToken: function() {

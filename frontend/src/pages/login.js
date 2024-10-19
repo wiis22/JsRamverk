@@ -1,20 +1,55 @@
 // src/pages/login.js
 
 import React, { useEffect, useState } from 'react';
-// import { useHistory } from "react-router-dom";
-// import { useRouter } from 'next/router';
-// import RedirectComp from '@/components/RedirectDocId';
-
-// import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
+// import loggedIn from '@/utils/checkLoggedIn';
+import RedirectComp from '@/components/Redirect.js';
 
 export default function Login() {
-    // let history = useHistory();
-    // // const router = useRouter();
+
+    const router = useRouter();
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
-    const [newDocId, setNewDocId] = useState(null);
+    const [okToken, setOkToken] = useState(false);
     const [newToken, setNewToken] = useState(null);
     const [isSubmitted, setSubmitted] = useState(false);
+
+    const loggedIn = async () => {
+        // const token = sessionstorage.getItem('token')
+        const [token, setToken] = useState(null);
+
+        useEffect(() => {
+            if (typeof window !== "undefined") {
+                const storedToken = sessionStorage.getItem('token') // window object doesn't exist, maybe.
+
+                if (storedToken) {
+                    setToken(storedToken);
+                }
+            }
+
+        }, []);
+
+        console.log("token: ", token);
+        console.log(token)
+        if (token) {
+            console.log("token exists", token);
+            const response = await fetch('http://localhost:1337/api/verify-logged-in', {
+                method: 'GET',
+                headers: {
+                    'x-access-token': token
+                }
+            });
+            const result = await response.json();
+
+            if (result.loggedIn) {
+                setOkToken(true)
+            }
+        }
+    };
+
+    loggedIn();
+
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -35,6 +70,7 @@ export default function Login() {
             });
 
             if (!response.ok) {
+                console.log("response.ok not ok on line 72")
                 throw new Error(`HTTP error, status ${response.status}`);
             }
 
@@ -42,13 +78,13 @@ export default function Login() {
 
             //set the jwt token to session storage.
 
-            console.log("redirecting to /home  the jwttoken: " + jwtToken);
+            console.log("redirecting to /home,  jwttoken set to : " + jwtToken);
             // return redirect(`/doc/${newDocId}`);
             setNewToken(jwtToken);
             sessionStorage.setItem('token', jwtToken)
 
         } catch (err) {
-
+            console.log("this happens when error fetching api/login")
             //maby check what whent wrong like incorrect username/password.
             console.error("Fetch error:", err)
         }
@@ -64,40 +100,46 @@ export default function Login() {
 
     return (
         <div className='login'>
-            <h1>Login</h1>
-            {newToken ? (
-                <RedirectComp route={"/"} />
+            {okToken ? (
+            <p>Already logged In!</p>
             ) : (
                 <div>
-                    <div className='login-form'>
-                        <form onSubmit={handleLogin}>
-                            <div>
-                            <label>Username: </label>
-                            <input className='textarea'
-                                    type="text"
-                                    value={user}
-                                    placeholder='email/username'
-                                    onChange={(e) => setUser(e.target.value)}
-                                    required
-                                />
-                            </div>
+                    <h1>Login</h1>
+                    {newToken ? (
+                        <RedirectComp route={"/"} />
+                    ) : (
+                        <div>
+                            <div className='login-form'>
+                                <form onSubmit={handleLogin}>
+                                    <div>
+                                    <label>Username: </label>
+                                    <input className='textarea'
+                                            type="text"
+                                            value={user}
+                                            placeholder='email/username'
+                                            onChange={(e) => setUser(e.target.value)}
+                                            required
+                                        />
+                                    </div>
 
-                            <div>
-                            <label>Password: </label>
-                            <input className='textarea'
-                                    type="text"
-                                    value={password}
-                                    placeholder='******'
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
+                                    <div>
+                                    <label>Password: </label>
+                                    <input className='textarea'
+                                            type="text"
+                                            value={password}
+                                            placeholder='******'
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <button className='new-doc-button' type="submit" disabled={isSubmitted}>Login</button>
+                                </form>
                             </div>
-                            <button className='new-doc-button' type="submit" disabled={isSubmitted}>Login</button>
-                        </form>
-                    </div>
-                    <div className='new-register'>
-                        <button className='new-doc-button' type="submit" onclick={handleRegister}>Register</button>
-                    </div>
+                            <div className='new-register'>
+                                <button className='new-doc-button' type="submit" onClick={handleRegister}>Register</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

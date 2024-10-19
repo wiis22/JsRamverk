@@ -49,7 +49,22 @@ app.post("/api/login", async (req, res) => {
         password: req.body.password
     };
 
-    const result = auth.login(loginData);
+    console.log("loginData:", loginData);
+
+    const result = await auth.login(loginData);
+
+    console.log("result in /api/login:", result);
+
+    res.json(result);
+});
+
+app.post("/api/register", async (req, res) => {
+    const newUserData = {
+        email: req.body.email,
+        password: req.body.password
+    };
+
+    const result = auth.register(newUserData);
 
     res.json(result);
 });
