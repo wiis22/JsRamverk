@@ -11,7 +11,22 @@ export default function Home() {
     const router = useRouter();
 
     const loggedIn = async () => {
+<<<<<<< HEAD
         const token = sessionstorage.getItem('token')
+=======
+        const [token, setToken] = useState(null);
+
+        useEffect(() => {
+            if (typeof window !== "undefined") {
+                const storedToken = sessionStorage.getItem('token') // window object doesn't exist, maybe.
+
+                if (storedToken) {
+                    setToken(storedToken);
+                }
+            }
+
+        }, []);
+>>>>>>> 7b0c2b80257b431d9e0064c29c12c68707ae0e85
 
         if (token) {
             const response = await fetch('http://localhost:1337/api/verify-logged-in', {

@@ -163,14 +163,13 @@ const dbFunctions = {
      *
      * @async
      *
-     * @param {string} colName Name of collection.
-     * @param {string} id    The id hexadecimal format to find in the db.
+     * @param {string} email    The email to check if in the db.
      *
      * @throws Error when database operation fails.
      *
      * @return {Object|null} The result in JSON format
      */
-    getOne: async function getOneUser(email) {
+    getOneUser: async function getOneUser(email) {
         try {
             const client  = await mongo.connect(dsn);
             const db = await client.db();
