@@ -16,7 +16,5 @@ export default function Header() {
                     {/* <a className="nav-rout" onClick={() => router.push("/")}>Home</a> */}
                 </div>
         </header>
-
-
     )
 }

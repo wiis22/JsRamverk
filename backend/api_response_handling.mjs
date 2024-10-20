@@ -37,8 +37,14 @@ app.get("/api/verify-logged-in", async (req, res) => {
     };
 
     const jwtToken = req.headers['x-access-token'];
+    console.log("jwtToken i verify-api!: ", jwtToken);
 
-    const result = auth.verifyToken(jwtToken);
+    const result = await auth.verifyToken(jwtToken);
+    console.log("result i api verify: ", result);
+    
+    if (result) {
+        data.loggedIn = result; // true
+    }
 
     res.json(data);
 });
@@ -64,9 +70,16 @@ app.post("/api/register", async (req, res) => {
         password: req.body.password
     };
 
-    const result = auth.register(newUserData);
 
-    res.json(result);
+    try {
+        const result = auth.register(newUserData);
+        res.json(result);
+    } catch (err) {
+        res.json(err);
+    }
+
+
+
 });
 
 app.post("/api/update", async (req, res) => {

@@ -3,56 +3,30 @@
 import React, { useEffect, useState } from 'react';
 // import { useHistory } from "react-router-dom";
 import { useRouter } from 'next/router';
+import loggedIn from '@/utils/checkLoggedIn';
 import RedirectComp from '@/components/Redirect.js';
 
 // import { useParams } from 'react-router-dom';
 
 export default function Home() {
     const router = useRouter();
-
-    const loggedIn = async () => {
-        // const token = sessionstorage.getItem('token')
-        const [token, setToken] = useState(null);
-
-        useEffect(() => {
-            if (typeof window !== "undefined") {
-                const storedToken = sessionStorage.getItem('token') // window object doesn't exist, maybe.
-
-                if (storedToken) {
-                    setToken(storedToken);
-                }
-            }
-
-        }, []);
-
-        console.log("/home loggedIn called. token: ", token);
-
-
-        if (token) {
-            const response = await fetch('http://localhost:1337/api/verify-logged-in', {
-                method: 'GET',
-                headers: {
-                    'x-access-token': token
-                }
-            });
-            const result = await response.json();
-
-            if (!result.loggedIn) {
-                router.push("/login");
-            }
-        } else {
-            router.push("/login");
-        }
-    };
-
-    loggedIn();
-
-
+    // const [token, setToken] = useState(null);
     const [newTitle, setNewTitle] = useState('');
     const [docs, setDocs] = useState([]);
     const [newDocId, setNewDocId] = useState(null);
     const [routeNewDoc, setRouteNewDoc] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
+
+    useEffect(() => {
+        const verifyLoggedIn = async () => {
+            const isLoggedIn = await loggedIn();
+            console.log("isLoggedIn i home:", isLoggedIn);
+            if (!isLoggedIn) {
+                router.push("/login")
+            }
+        }
+        verifyLoggedIn();
+    }, []);
 
     useEffect(() => {
         const fetchDocs = async () => {

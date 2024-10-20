@@ -2,54 +2,28 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-// import loggedIn from '@/utils/checkLoggedIn';
+import loggedIn from '@/utils/checkLoggedIn';
 import RedirectComp from '@/components/Redirect.js';
 
 export default function Login() {
-
     const router = useRouter();
+    const [token, setToken] = useState(null);
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [okToken, setOkToken] = useState(false);
     const [newToken, setNewToken] = useState(null);
     const [isSubmitted, setSubmitted] = useState(false);
 
-    const loggedIn = async () => {
-        // const token = sessionstorage.getItem('token')
-        const [token, setToken] = useState(null);
 
-        useEffect(() => {
-            if (typeof window !== "undefined") {
-                const storedToken = sessionStorage.getItem('token') // window object doesn't exist, maybe.
-
-                if (storedToken) {
-                    setToken(storedToken);
-                }
-            }
-
-        }, []);
-
-        console.log("token: ", token);
-        console.log(token)
-        if (token) {
-            console.log("token exists", token);
-            const response = await fetch('http://localhost:1337/api/verify-logged-in', {
-                method: 'GET',
-                headers: {
-                    'x-access-token': token
-                }
-            });
-            const result = await response.json();
-
-            if (result.loggedIn) {
-                setOkToken(true)
-            }
+    useEffect(() => {
+        const verifyLoggedIn = async () => {
+            const isLoggedIn = await loggedIn();
+            console.log("isLoggedIn i login:", isLoggedIn);
+            // return isLoggedIn;
+            setOkToken(isLoggedIn);
         }
-    };
-
-    loggedIn();
-
-
+        verifyLoggedIn();
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -94,14 +68,13 @@ export default function Login() {
     const handleRegister = async (e) => {
         e.preventDefault();
         router.push("/register");
-        //need to redirect to a /register
     }
 
 
     return (
         <div className='login'>
             {okToken ? (
-            <p>Already logged In!</p>
+            <h1>Already logged In!</h1>
             ) : (
                 <div>
                     <h1>Login</h1>
