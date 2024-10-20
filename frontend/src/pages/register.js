@@ -44,7 +44,7 @@ export default function Register() {
                 body: JSON.stringify(newUserData)
             });
 
-            console.log("response från api register:", response);
+            // console.log("response från api register:", response);
 
             if (!response.success) {
                 // const errorData = await response.json();
@@ -56,7 +56,7 @@ export default function Register() {
 
         } catch (err) {
             console.error("Fetch error:", err.message);
-            console.log("err.message inne i catch i register.js: ", err.message);
+            // console.log("err.message inne i catch i register.js: ", err.message);
             
             if (err.message === "Username is already in use!") {
                 setErrorMessage("Email already exsits.")

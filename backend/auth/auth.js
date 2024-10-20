@@ -6,10 +6,10 @@ const jwtSecret = process.env.JWT_SECRET;
 const auth = {
     register: async function (userData) {
         try {
-            console.log("userData i auth register: ", userData);
+            // console.log("userData i auth register: ", userData);
 
             const resFromDb = await db.getOneUser(userData.email);
-            console.log("resFromDb i auth:", resFromDb);
+            // console.log("resFromDb i auth:", resFromDb);
 
             if (resFromDb) {
                 throw new Error("Username is already in use!");
@@ -32,7 +32,7 @@ const auth = {
         try {
             const userData = await db.getOneUser(loginData.email);
 
-            console.log("userData in auth.login:", userData)
+            // console.log("userData in auth.login:", userData)
 
             const res = await this.comparePasswords(loginData.password, userData.password);
 
@@ -42,7 +42,7 @@ const auth = {
                 return jwtToken;
             }
 
-            console.log("res in auth.login:", res)
+            // console.log("res in auth.login:", res)
             return res; // will be false
         } catch (error) {
             return error.message

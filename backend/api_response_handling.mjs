@@ -55,11 +55,11 @@ app.post("/api/login", async (req, res) => {
         password: req.body.password
     };
 
-    console.log("loginData:", loginData);
+    // console.log("loginData:", loginData);
 
     const result = await auth.login(loginData);
 
-    console.log("result in /api/login:", result);
+    // console.log("result in /api/login:", result);
 
     res.json(result);
 });
@@ -72,7 +72,7 @@ app.post("/api/register", async (req, res) => {
 
     try {
         const result = await auth.register(newUserData);
-        console.log("result inne i api/register: ", result);
+        // console.log("result inne i api/register: ", result);
         if (!result.sucsess) {
             throw new Error(result.message || "Registation failed");
         }
@@ -80,7 +80,7 @@ app.post("/api/register", async (req, res) => {
         res.json({ sucsess: true, data: result });
 
     } catch (err) {
-        console.log("error thrown inne i api/register: ", err.message);
+        // console.log("error thrown inne i api/register: ", err.message);
         res.json({ sucsess: false, error: err.message });
     }
 });

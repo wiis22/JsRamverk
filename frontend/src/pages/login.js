@@ -7,7 +7,7 @@ import RedirectComp from '@/components/Redirect.js';
 
 export default function Login() {
     const router = useRouter();
-    const [token, setToken] = useState(null);
+    // const [token, setToken] = useState(null);
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [okToken, setOkToken] = useState(false);
@@ -18,7 +18,7 @@ export default function Login() {
     useEffect(() => {
         const verifyLoggedIn = async () => {
             const isLoggedIn = await loggedIn();
-            console.log("isLoggedIn i login:", isLoggedIn);
+            // console.log("isLoggedIn i login:", isLoggedIn);
             setOkToken(isLoggedIn);
         }
         verifyLoggedIn();
