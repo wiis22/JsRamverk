@@ -9,6 +9,7 @@ export default function Doc() {
     const { id } = router.query
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [emailShareTo, setEmailShareTo] = useState('');
 
     // Fetch document data based on id
     useEffect(() => {
@@ -47,8 +48,61 @@ export default function Doc() {
         });
     }
 
+    const handleShareDocument = async (e) => {
+        e.preventDefault();
+
+        // make share document form hidden
+        const shareDocumentForm = document.querySelector("share-document-form");
+        shareDocumentForm.setAttribute("hidden");
+
+        // make start sharing button not hidden
+        const startSharingButton = document.querySelector("start-sharing-button");
+        startSharingButton.removeAttribute("hidden");
+
+        const data = {
+            email: email,
+            id: id
+        };
+
+        const response = await fetch('https://wiis22.azurewebsites.net/api/share-doc', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    }
+
+    const handleStartSharing = async (e) => {
+        e.preventDefault();
+
+        // make share document form not hidden
+        const shareDocumentForm = document.querySelector("share-document-form");
+        shareDocumentForm.removeAttribute("hidden");
+
+        // make start sharing button hidden
+        const startSharingButton = document.querySelector("start-sharing-button");
+        startSharingButton.setAttribute("hidden");
+    }
+
+
     return (
         <div>
+            <div className="share-document">
+                <button onClick={handleStartSharing} className="button start-sharing-button">Share</button>
+                
+                <form onSubmit={handleShareDocument} className="share-document-form" hidden>
+                    <label>Email</label>
+                    <input className="share-email-input"
+                            type="text"
+                            value={email}
+                            onChange={(e) => setEmailShareTo(e.target.value)}
+                            required
+                    />
+                    <button className='button' type='submit'>Share</button>
+                </form>
+            </div>
+
             <form onSubmit={handleUpdate} className='new-doc'>
                 <label>Title:</label>
                 <input className='doc-title textarea'
@@ -64,6 +118,7 @@ export default function Doc() {
                     />
                 <button className="button" type="submit">Update</button>
             </form>
+            
         </div>
     )
 }

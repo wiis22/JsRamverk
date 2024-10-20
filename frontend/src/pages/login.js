@@ -19,7 +19,6 @@ export default function Login() {
         const verifyLoggedIn = async () => {
             const isLoggedIn = await loggedIn();
             console.log("isLoggedIn i login:", isLoggedIn);
-            // return isLoggedIn;
             setOkToken(isLoggedIn);
         }
         verifyLoggedIn();
@@ -50,12 +49,9 @@ export default function Login() {
 
             const jwtToken = await response.json();
 
-            //set the jwt token to session storage.
-
-            console.log("redirecting to /home,  jwttoken set to : " + jwtToken);
-            // return redirect(`/doc/${newDocId}`);
             setNewToken(jwtToken);
-            sessionStorage.setItem('token', jwtToken)
+            sessionStorage.setItem('token', jwtToken);
+            sessionStorage.setItem('user', user);
 
         } catch (err) {
             console.log("this happens when error fetching api/login")

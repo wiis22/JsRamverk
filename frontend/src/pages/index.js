@@ -16,6 +16,7 @@ export default function Home() {
     const [newDocId, setNewDocId] = useState(null);
     const [routeNewDoc, setRouteNewDoc] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
+    const [user, setUser] = useState('');
 
     useEffect(() => {
         const verifyLoggedIn = async () => {
@@ -41,10 +42,14 @@ export default function Home() {
     const handleNewDocSubmit = async (e) => {
         e.preventDefault();
 
+        setUser(sessionStorage.getItem('user'));
+
         setSubmitted(true);
         const data = {
-            title: newTitle
+            title: newTitle,
+            user: user
         };
+
         try {
             const response = await fetch('https://wiis22.azurewebsites.net/api/new-doc', {
                 method: 'POST',

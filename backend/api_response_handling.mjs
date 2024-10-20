@@ -102,7 +102,8 @@ app.post("/api/update", async (req, res) => {
 app.post("/api/new-doc", async (req, res) => {
     const data = {
         title: req.body.title,
-        content: ""
+        content: "",
+        users: [req.body.user]
     };
 
     const result = await dbFunctions.addOne("documents", data); //back from addOne will be the id
