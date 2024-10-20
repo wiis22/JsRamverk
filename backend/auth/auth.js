@@ -6,19 +6,25 @@ const jwtSecret = process.env.JWT_SECRET;
 const auth = {
     register: async function (userData) {
         try {
-            const userData = await db.getOneUser(loginData.email);
-            throw error("Username is alrady in use!: ", userData.email)
-        } catch (err) {
-            try {
-                const hash = await bcrypt.hash(userData.password, 10);
-                userData.password = hash;
-                console.log("hash: ", hash);
-                
-                await db.addOne("users", userData);
-                return true;
-            } catch (error) {
-                return error.message("Failed to add a user.");
+            console.log("userData i auth register: ", userData);
+
+            const resFromDb = await db.getOneUser(userData.email);
+            console.log("resFromDb i auth:", resFromDb);
+
+            if (resFromDb) {
+                throw new Error("Username is already in use!");
             }
+
+            const hash = await bcrypt.hash(userData.password, 10);
+            userData.password = hash;
+            // console.log("hash: ", hash);
+
+            await db.addOne("users", userData);
+            return true;
+
+        } catch (err) {
+            console.error("Error in register auth: ", err.message);
+            return err.message;
         }
     },
 

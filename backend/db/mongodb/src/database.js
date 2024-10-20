@@ -179,12 +179,15 @@ const dbFunctions = {
 
             await client.close();
 
-            // console.log('result:', result);
+            // console.log('result i db getOneUser :', result);
+            if (!result) {
+                throw new Error(`No user found with email: ${email}`);
+            }
 
             return result;
         } catch (err) {
             console.log(err);
-            throw error("Couldn't find user data based on email:" + email);
+            throw new Error("Couldn't find user data based on email:" + email);
         }
     },
 

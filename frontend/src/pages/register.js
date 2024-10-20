@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 // import { useParams } from 'react-router-dom';
 
 export default function Register() {
-    // let history = useHistory();
     const router = useRouter();
     const [newUser, setNewUser] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -19,8 +18,6 @@ export default function Register() {
     const handleNewRegister = async (e) => {
         e.preventDefault();
         setSubmitted(true);
-
-        // compare the two passwords before the register......
 
         if (newPassword !== newPassword2) {
             setErrorMessage("Password is not the same.")
@@ -47,15 +44,31 @@ export default function Register() {
                 body: JSON.stringify(newUserData)
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error, status ${response.status}`);
+            console.log("response från api register:", response);
+
+            if (!response.success) {
+                // const errorData = await response.json();
+                // throw new Error(errorData.message);
+                throw new Error(response.message || "Registation failed");
             }
-            
-            // fix what will happen after register ....  test
+
             router.push("/login")
 
         } catch (err) {
-            console.error("Fetch error:", err)
+            console.error("Fetch error:", err.message);
+            console.log("err.message inne i catch i register.js: ", err.message);
+            
+            if (err.message === "Username is already in use!") {
+                setErrorMessage("Email already exsits.")
+            } else {
+                setErrorMessage(err.message);
+            }
+
+            setSubmitted(false);
+            setTimeout(() => {
+                setErrorMessage("")
+            }, 3000);
+            return;
         }
     }
 

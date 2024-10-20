@@ -70,16 +70,19 @@ app.post("/api/register", async (req, res) => {
         password: req.body.password
     };
 
-
     try {
-        const result = auth.register(newUserData);
-        res.json(result);
+        const result = await auth.register(newUserData);
+        console.log("result inne i api/register: ", result);
+        if (!result.sucsess) {
+            throw new Error(result.message || "Registation failed");
+        }
+
+        res.json({ sucsess: true, data: result });
+
     } catch (err) {
-        res.json(err);
+        console.log("error thrown inne i api/register: ", err.message);
+        res.json({ sucsess: false, error: err.message });
     }
-
-
-
 });
 
 app.post("/api/update", async (req, res) => {
