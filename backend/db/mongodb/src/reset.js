@@ -6,8 +6,8 @@
 require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 // const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
-let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
-// let dsn = `mongodb+srv://main_user:user_main@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
+// let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
+let dsn = `mongodb+srv://main_user:user_main@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
 
 console.log("dsn: " + dsn)
 
@@ -18,6 +18,12 @@ const path = require("path");
 // reset collection documents
 resetCollection(dsn, "documents")
     .catch(err => console.log(err));
+
+
+// reset collection users
+resetCollection(dsn, "users")
+    .catch(err => console.log(err));
+
 
 
 

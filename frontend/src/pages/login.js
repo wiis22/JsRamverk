@@ -41,14 +41,14 @@ export default function Login() {
                 },
                 body: JSON.stringify(loginData)
             });
-
+            
+            
             if (!response.ok) {
-                console.log("response.ok not ok on line 72")
+                console.log("response.ok not ok")
                 throw new Error(`HTTP error, status ${response.status}`);
             }
 
             const jwtToken = await response.json();
-
             setNewToken(jwtToken);
             sessionStorage.setItem('token', jwtToken);
             sessionStorage.setItem('user', user);

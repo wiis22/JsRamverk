@@ -11,7 +11,7 @@ export default async function checkLoggedIn(){
     const loggedIn = async () => {
         if (typeof window !== "undefined") {
             const storedToken = sessionStorage.getItem('token') // window object doesn't exist, maybe.
-            console.log("storedToken: ", storedToken);
+            // console.log("storedToken: ", storedToken);
             if (storedToken) {
                 // setToken(storedToken);
                 // console.log("token: ", token);
@@ -23,7 +23,7 @@ export default async function checkLoggedIn(){
                     }
                 });
                 const result = await response.json();
-                console.log("result", result)
+                // console.log("result", result)
                 if (!result.loggedIn) {
                     return false;
                 }

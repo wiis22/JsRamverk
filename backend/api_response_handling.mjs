@@ -113,7 +113,8 @@ app.post("/api/new-doc", async (req, res) => {
         content: "",
         users: [req.body.user]
     };
-
+    console.log("data inne i api/new-doc:", data);
+    
     const result = await dbFunctions.addOne("documents", data); //back from addOne will be the id
 
     if (!result) {
@@ -158,9 +159,9 @@ app.get('/api/get-all-docs', async (req, res) => {
 
 app.post('/api/get-user-docs', async (req, res) => {
     try {
-        console.log("body", req.body);
-        const username = req.body;
-        const result = await dbFunctions.getUserDocs(username);
+        console.log("body: ", req.body.user);
+        const username = req.body.user;
+        const result = await dbFunctions.getUserDocs("documents" ,username);
         res.json(result);
     } catch(error) {
         console.error('Error fetching documents:', error);

@@ -70,7 +70,7 @@ export default function Doc() {
 
         console.log("data", data)
 
-        const response = await fetch('https://wiis22.azurewebsites.net/api/share-doc', {
+        const response = await fetch('http://localhost:1337/api/share-doc', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

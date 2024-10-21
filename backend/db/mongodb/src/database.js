@@ -33,7 +33,8 @@ const dbFunctions = {
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection(colName);
-
+        console.log("data inne i addOne db:", data);
+        
         const result = await col.insertOne(data);
 
         await client.close();
@@ -112,40 +113,45 @@ const dbFunctions = {
         }
     },
 
-        /**
+    /**
      * Insert one into the collection
      *
      * @async
      *
+     * @param {string} colName Name of collection.
      * @param {string} username  User to get docs for
      *
      * @throws Error when database operation fails.
      *
      * @return {Object|null} The resould in JSON format, or null if no doc found.
      */
-        getUserDocs: async function getUserDocs(username) {
-            try {
-                colName = "documents";
-                // console.log('DSN:', dsn);
-                const client  = await mongo.connect(dsn);
-                const db = await client.db();
-    
-                const col = await db.collection(colName);
-                const result = await col.find({ users: { $in: [username] } }).toArray();
-                // const result = await col.find({ users: username } ).toArray();
-    
-                await client.close();
-    
-                // console.log(result);
-    
-                return result;
-            } catch (err) {
-                console.log(err);
-                if (err.message == "Collection does not exist") {
-                    throw err;
-                } // Could throw general error below here
-            }
-        },
+    getUserDocs: async function getUserDocs(colName, username) {
+        try {
+            // console.log('DSN:', dsn);
+            const client  = await mongo.connect(dsn);
+            const db = await client.db();
+            console.log("user inne i getUserDocs:", username);
+            
+            const col = await db.collection(colName);
+            
+            const result = await col.find({ users: username }).toArray();
+            // const result2 = await col.find({ users: { $in: [username] } }).toArray();
+            const result3 = await col.find().toArray();
+
+            await client.close();
+
+            console.log("result inne i getuserDocs:", result);
+            // console.log("result2 inne i getuserDocs:", result2);
+            console.log("result3 inne i getuserDocs:", result3);
+
+            return result;
+        } catch (err) {
+            console.log(err);
+            if (err.message == "Collection does not exist") {
+                throw err;
+            } // Could throw general error below here
+        }
+    },
 
     /**
      * Get one document from a collection in the database based on id.

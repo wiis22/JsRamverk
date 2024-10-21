@@ -16,12 +16,12 @@ export default function Home() {
     const [newDocId, setNewDocId] = useState(null);
     const [routeNewDoc, setRouteNewDoc] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
-    const [user, setUser] = useState('');
+    const [loggedUser, setLoggedUser] = useState('');
 
     useEffect(() => {
         const verifyLoggedIn = async () => {
             const isLoggedIn = await loggedIn();
-            console.log("isLoggedIn i home:", isLoggedIn);
+            // console.log("isLoggedIn i home:", isLoggedIn);
             if (!isLoggedIn) {
                 router.push("/login")
             }
@@ -31,17 +31,33 @@ export default function Home() {
 
     useEffect(() => {
         const fetchDocs = async () => {
-            setUser(sessionStorage.getItem('user'));
-            console.log("fetching get-suer-docs with username " , user)
-            const response = await fetch('http://localhost:1337/api/get-user-docs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            });
-            const result = await response.json();
-            setDocs(result);
+
+            const userFromSession = sessionStorage.getItem('user');
+            setLoggedUser(userFromSession);
+
+            // const data = {
+            //     user: user
+            // }
+            try{
+                console.log("data after setuser: " , userFromSession);
+                const response = await fetch('http://localhost:1337/api/get-user-docs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user: userFromSession })
+                });
+
+                console.log("response i Home:", response);
+
+                const result = await response.json();
+
+                console.log("result i Home: ", result);
+                setDocs(result);
+            } catch (err) {
+                console.error("error fetching the docs:", err);
+            }
+
         };
 
         fetchDocs();
@@ -53,11 +69,12 @@ export default function Home() {
         setSubmitted(true);
         const data = {
             title: newTitle,
-            user: user
+            user: loggedUser
         };
-
+        console.log("data in handleNewDocSubmit:", data);
+        
         try {
-            const response = await fetch('https://wiis22.azurewebsites.net/api/new-doc', {
+            const response = await fetch('http://localhost:1337/api/new-doc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -75,7 +92,6 @@ export default function Home() {
             // return redirect(`/doc/${newDocId}`);
             setRouteNewDoc(`/doc/${newDocId}`);
             setNewDocId(newDocId);
-            // history.push(`/doc/${newDocId}`) // denna redirect fungerar ej. problemet är att history får tyldigen inte skapas pga att det inte verkar vara inuti en routing ellet nåt. har testat flera andra redirects. den gamla var inte SPA.
 
         } catch (err) {
             console.error("Fetch error:", err)
