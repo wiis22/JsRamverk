@@ -10,6 +10,9 @@ export default function Doc() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [emailShareTo, setEmailShareTo] = useState('');
+    const [shareFormHidden, setShareFormHidden] = useState(true);
+    const [shareButtonHidden, setShareButtonHidden] = useState(false);
+    const [users, setUsers] = useState([]);
 
     // Fetch document data based on id
     useEffect(() => {
@@ -22,6 +25,7 @@ export default function Doc() {
 
             setTitle(result.title);
             setContent(result.content);
+            setUsers(result.users);
         };
 
         if (id != undefined) {
@@ -36,7 +40,8 @@ export default function Doc() {
         const data = {
             id,
             title,
-            content
+            content,
+            users
         };
 
         const response = await fetch('https://wiis22.azurewebsites.net/api/update', {
@@ -52,17 +57,18 @@ export default function Doc() {
         e.preventDefault();
 
         // make share document form hidden
-        const shareDocumentForm = document.querySelector("share-document-form");
-        shareDocumentForm.setAttribute("hidden");
+        setShareFormHidden(true);
 
         // make start sharing button not hidden
-        const startSharingButton = document.querySelector("start-sharing-button");
-        startSharingButton.removeAttribute("hidden");
+        setShareButtonHidden(false);
 
         const data = {
-            email: email,
-            id: id
+            email: emailShareTo,
+            id: id,
+            title: title
         };
+
+        console.log("data", data)
 
         const response = await fetch('https://wiis22.azurewebsites.net/api/share-doc', {
             method: 'POST',
@@ -71,31 +77,34 @@ export default function Doc() {
             },
             body: JSON.stringify(data)
         });
+
+        console.log("response", response)
+        const res = await response.json();
     }
 
     const handleStartSharing = async (e) => {
         e.preventDefault();
 
+        console.log("started sharing")
+
         // make share document form not hidden
-        const shareDocumentForm = document.querySelector("share-document-form");
-        shareDocumentForm.removeAttribute("hidden");
+        setShareFormHidden(false);
 
         // make start sharing button hidden
-        const startSharingButton = document.querySelector("start-sharing-button");
-        startSharingButton.setAttribute("hidden");
+        setShareButtonHidden(true);
     }
 
 
     return (
         <div>
             <div className="share-document">
-                <button onClick={handleStartSharing} className="button start-sharing-button">Share</button>
+                <button onClick={handleStartSharing} className="button start-sharing-button" hidden={shareButtonHidden}>Share</button>
                 
-                <form onSubmit={handleShareDocument} className="share-document-form" hidden>
+                <form onSubmit={handleShareDocument} className="share-document-form" hidden={shareFormHidden}>
                     <label>Email</label>
                     <input className="share-email-input"
                             type="text"
-                            value={email}
+                            value={emailShareTo}
                             onChange={(e) => setEmailShareTo(e.target.value)}
                             required
                     />

@@ -31,7 +31,15 @@ export default function Home() {
 
     useEffect(() => {
         const fetchDocs = async () => {
-            const response = await fetch('https://wiis22.azurewebsites.net/api/get-all-docs');
+            setUser(sessionStorage.getItem('user'));
+            console.log("fetching get-suer-docs with username " , user)
+            const response = await fetch('http://localhost:1337/api/get-user-docs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
             const result = await response.json();
             setDocs(result);
         };
@@ -41,8 +49,6 @@ export default function Home() {
 
     const handleNewDocSubmit = async (e) => {
         e.preventDefault();
-
-        setUser(sessionStorage.getItem('user'));
 
         setSubmitted(true);
         const data = {

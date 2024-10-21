@@ -112,6 +112,41 @@ const dbFunctions = {
         }
     },
 
+        /**
+     * Insert one into the collection
+     *
+     * @async
+     *
+     * @param {string} username  User to get docs for
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {Object|null} The resould in JSON format, or null if no doc found.
+     */
+        getUserDocs: async function getUserDocs(username) {
+            try {
+                colName = "documents";
+                // console.log('DSN:', dsn);
+                const client  = await mongo.connect(dsn);
+                const db = await client.db();
+    
+                const col = await db.collection(colName);
+                const result = await col.find({ users: { $in: [username] } }).toArray();
+                // const result = await col.find({ users: username } ).toArray();
+    
+                await client.close();
+    
+                // console.log(result);
+    
+                return result;
+            } catch (err) {
+                console.log(err);
+                if (err.message == "Collection does not exist") {
+                    throw err;
+                } // Could throw general error below here
+            }
+        },
+
     /**
      * Get one document from a collection in the database based on id.
      *
@@ -181,13 +216,13 @@ const dbFunctions = {
 
             // console.log('result i db getOneUser :', result);
             if (!result) {
-                throw new Error(`No user found with email: ${email}`);
+                throw new Error("No user found with email");
             }
 
             return result;
         } catch (err) {
             console.log(err);
-            throw new Error("Couldn't find user data based on email:" + email);
+            throw new Error("Couldn't find user data based on email");
         }
     },
 
@@ -197,7 +232,7 @@ const dbFunctions = {
      * @async
      *
      * @param {string} colName Name of collection.
-     * @param {object} data    Data containing ID in hexadecimal format, title and content.
+     * @param {object} data    Data containing ID in hexadecimal format, title, content and array of users.
      *
      * @throws Error when database operation fails.
      *
@@ -225,7 +260,7 @@ const dbFunctions = {
 
             const result = await col.updateOne(
                 { _id: objectId },
-                { $set: { title: data.title, content: data.content } }
+                { $set: { title: data.title, content: data.content, users: data.users } }
             );
 
             await client.close();

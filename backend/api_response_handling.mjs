@@ -1,7 +1,5 @@
 import 'dotenv/config';
 
-
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
@@ -10,7 +8,13 @@ import cors from 'cors';
 import dbFunctions from "./db/mongodb/src/database.js";
 import auth from "./auth/auth.js";
 
-import jwt from 'jsonwebtoken';
+import formData from "form-data";
+import Mailgun from "mailgun.js";
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
+
+// import jwt from 'jsonwebtoken';
+// import { equal } from 'assert';
 
 const app = express();
 const port = process.env.PORT || 1337;
@@ -59,7 +63,7 @@ app.post("/api/login", async (req, res) => {
 
     const result = await auth.login(loginData);
 
-    // console.log("result in /api/login:", result);
+    console.log("result in /api/login:", result);
 
     res.json(result);
 });
@@ -72,16 +76,16 @@ app.post("/api/register", async (req, res) => {
 
     try {
         const result = await auth.register(newUserData);
-        // console.log("result inne i api/register: ", result);
-        if (!result.sucsess) {
-            throw new Error(result.message || "Registation failed");
-        }
+        // if (!result) {
+        //     throw new Error(result.message || "Registation failed");
+        // }
 
-        res.json({ sucsess: true, data: result });
+        console.log("result in api/register", result)
+        res.json({ success: true, data: result });
 
     } catch (err) {
         // console.log("error thrown inne i api/register: ", err.message);
-        res.json({ sucsess: false, error: err.message });
+        res.json({ success: false, error: err.message });
     }
 });
 
@@ -89,7 +93,8 @@ app.post("/api/update", async (req, res) => {
     const data = {
         id: req.body.id,
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        users: req.body.users
     };
 
     // console.log("data in api:", data);
@@ -149,6 +154,38 @@ app.get('/api/get-all-docs', async (req, res) => {
         console.error('Error fetching documents:', error);
         return res.status(500).send('Internal server Error');
     }
+});
+
+app.post('/api/get-user-docs', async (req, res) => {
+    try {
+        console.log("body", req.body);
+        const username = req.body;
+        const result = await dbFunctions.getUserDocs(username);
+        res.json(result);
+    } catch(error) {
+        console.error('Error fetching documents:', error);
+        return res.status(500).send('Internal server Error');
+    }
+});
+
+app.post('/api/share-doc', async (req, res) => {
+
+    const registerUrl = `http://localhost:3000/register?email=${req.body.email}+id=${req.body.id}`;
+
+    console.log("sending email with link: ", registerUrl);
+
+    const result = mg.messages.create('sandbox-123.mailgun.org', {
+        from: `JSR Texteditor <${process.env.MAILGUN_API_KEY}>`,
+        to: [req.body.email],
+        subject: "Share document",
+        text: "Testing some Mailgun awesomeness!",
+        html: `<h1>Click the link below to get access to the document ${req.body.title}</h1>
+                <a href=${registerUrl}>Accept access</a>`
+    })
+
+    console.log("mailgun res: ", result);
+    
+    res.json(result);
 });
 
 

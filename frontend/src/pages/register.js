@@ -13,7 +13,7 @@ export default function Register() {
     const [newPassword, setNewPassword] = useState('');
     const [newPassword2, setNewPassword2] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleNewRegister = async (e) => {
         e.preventDefault();
@@ -44,12 +44,14 @@ export default function Register() {
                 body: JSON.stringify(newUserData)
             });
 
-            // console.log("response från api register:", response);
+            const data = await response.json();
 
-            if (!response.success) {
+            console.log("data från api register:", data);
+
+            if (!data.success) {
                 // const errorData = await response.json();
                 // throw new Error(errorData.message);
-                throw new Error(response.message || "Registation failed");
+                throw new Error(data.message || "Registation failed");
             }
 
             router.push("/login")
@@ -58,8 +60,8 @@ export default function Register() {
             console.error("Fetch error:", err.message);
             // console.log("err.message inne i catch i register.js: ", err.message);
             
-            if (err.message === "Username is already in use!") {
-                setErrorMessage("Email already exsits.")
+            if (err.message === "Username is already in use") {
+                setErrorMessage("Email already exsits")
             } else {
                 setErrorMessage(err.message);
             }
