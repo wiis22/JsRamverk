@@ -12,9 +12,8 @@ import formData from "form-data";
 import Mailgun from "mailgun.js";
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
-
-// import jwt from 'jsonwebtoken';
-// import { equal } from 'assert';
+console.log("setting up mailgun with values:")
+console.log({username: 'api', key: process.env.MAILGUN_API_KEY})
 
 const app = express();
 const port = process.env.PORT || 1337;
@@ -174,22 +173,25 @@ app.post('/api/share-doc', async (req, res) => {
         const registerUrl = `http://localhost:3000/register?email=${req.body.email}&id=${req.body.id}`;
 
         console.log("sending email with link: ", registerUrl);
+        console.log("MAILGUN_DOMAIN:", process.env.MAILGUN_DOMAIN);
+        console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
+        console.log("From Address:", `Mailgun Sandbox <mailgun@sandbox2ddae29b18024d8ab280c810a65939b4.mailgun.org>`);
 
-        const result = await mg.messages.create('sandbox-123.mailgun.org', {
-            from: `no-reply@wiis22-frontend.azurewebsites.net`,
+        const result = await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+            from: `Excited User <mailgun$${process.env.MAILGUN_DOMAIN}>`,
             to: [req.body.email],
             subject: "Share document",
             text: "Testing some Mailgun awesomeness!",
             html: `<h1>Click the link below to register a new account and get access to the document ${req.body.title}</h1>
                     <a href=${registerUrl}>Get access</a>`
-        })
+        });
 
-        console.log("mailgun res: ", result);
+        console.log("mailgun.create result: ", result);
         
         res.json(result); // don'know yet what this will be
     } catch (err) {
         console.error("Error sending email via mailgun: ", err);
-        console.log("MAILGUN_API_KEY: ", process.env.MAILGUN_API_KEY);
+        console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
         res.status(500).json({ error: "Failed to send email via mailgun" });
     }
 });

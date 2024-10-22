@@ -102,7 +102,7 @@ export default function Doc() {
                 
                 <form onSubmit={handleShareDocument} className="share-document-form" hidden={shareFormHidden}>
                     <label>Email</label>
-                    <input className="share-email-input"
+                    <input className="share-email-input textarea"
                             type="text"
                             value={emailShareTo}
                             onChange={(e) => setEmailShareTo(e.target.value)}
@@ -127,7 +127,6 @@ export default function Doc() {
                     />
                 <button className="button" type="submit">Update</button>
             </form>
-            
         </div>
     )
 }

@@ -137,6 +137,10 @@ footer {
     cursor: pointer;
 }
 
+/* .start-sharing-button {
+    
+} */
+
 .doc-content {
     resize: vertical;
     min-height: 25rem;
@@ -161,4 +165,8 @@ footer {
 .nav-rout:hover {
     color: #94cdff;
     cursor: pointer;
+}
+
+[hidden] {
+    display: none !important;
 }
