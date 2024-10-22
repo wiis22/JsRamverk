@@ -190,7 +190,7 @@ app.post('/api/share-doc', async (req, res) => {
             subject: "Share document",
             text: "Testing some Mailgun awesomeness!",
             html: `<h1>Click the link below to register a new account and get access to the document ${req.body.title}</h1>
-                    <a href=${registerUrl}>Get access</a>`
+                    <a href="${registerUrl}">Get access</a>`
         });
 
         console.log("mailgun result: ", result);
