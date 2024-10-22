@@ -9,11 +9,17 @@ import { useRouter } from 'next/router';
 
 export default function Register() {
     const router = useRouter();
+    const { email, id } = router.query;
+
     const [newUser, setNewUser] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPassword2, setNewPassword2] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
+    if (email) {
+        setNewUser(email);
+    }
 
     const handleNewRegister = async (e) => {
         e.preventDefault();
@@ -36,7 +42,7 @@ export default function Register() {
 
 
         try {
-            const response = await fetch('http://localhost:1337/api/register', {
+            const registerResponse = await fetch('http://localhost:1337/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -44,14 +50,30 @@ export default function Register() {
                 body: JSON.stringify(newUserData)
             });
 
-            const data = await response.json();
+            const data = await registerResponse.json();
 
             console.log("data från api register:", data);
 
             if (!data.success) {
-                // const errorData = await response.json();
-                // throw new Error(errorData.message);
                 throw new Error(data.message || "Registation failed");
+            }
+
+            const addUserData = {
+                email: email,
+                id: id
+            };
+
+            // if email exist, add user to document (got here via email link)
+            if (email) {
+                const addUserResponse = await fetch('http://localhost:1337/api/doc-add-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(addUserData)
+                });
+
+                const addUserResult = await addUserResponse.json(); // not checking/using this currently
             }
 
             router.push("/login")
@@ -73,7 +95,7 @@ export default function Register() {
             return;
         }
     }
-
+ 
 
     return (
         <div className='register'>
@@ -82,11 +104,11 @@ export default function Register() {
                     <div className='login-form'>
                         <form onSubmit={handleNewRegister}>
                             <div>
-                            <label>Username: </label>
+                            <label>Email: </label>
                             <input className='textarea'
                                     type="text"
                                     value={newUser}
-                                    placeholder='email/username'
+                                    placeholder='email'
                                     onChange={(e) => setNewUser(e.target.value)}
                                     required
                                 />
@@ -99,6 +121,7 @@ export default function Register() {
                                     value={newPassword}
                                     placeholder='******'
                                     onChange={(e) => setNewPassword(e.target.value)}
+                                    readOnly={!!email}
                                     required
                                 />
                             </div>

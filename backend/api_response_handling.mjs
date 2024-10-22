@@ -170,24 +170,44 @@ app.post('/api/get-user-docs', async (req, res) => {
 });
 
 app.post('/api/share-doc', async (req, res) => {
+    try {
+        const registerUrl = `http://localhost:3000/register?email=${req.body.email}&id=${req.body.id}`;
 
-    const registerUrl = `http://localhost:3000/register?email=${req.body.email}+id=${req.body.id}`;
+        console.log("sending email with link: ", registerUrl);
 
-    console.log("sending email with link: ", registerUrl);
+        const result = await mg.messages.create('sandbox-123.mailgun.org', {
+            from: `no-reply@wiis22-frontend.azurewebsites.net`,
+            to: [req.body.email],
+            subject: "Share document",
+            text: "Testing some Mailgun awesomeness!",
+            html: `<h1>Click the link below to register a new account and get access to the document ${req.body.title}</h1>
+                    <a href=${registerUrl}>Get access</a>`
+        })
 
-    const result = mg.messages.create('sandbox-123.mailgun.org', {
-        from: `JSR Texteditor <${process.env.MAILGUN_API_KEY}>`,
-        to: [req.body.email],
-        subject: "Share document",
-        text: "Testing some Mailgun awesomeness!",
-        html: `<h1>Click the link below to get access to the document ${req.body.title}</h1>
-                <a href=${registerUrl}>Accept access</a>`
-    })
-
-    console.log("mailgun res: ", result);
-    
-    res.json(result);
+        console.log("mailgun res: ", result);
+        
+        res.json(result); // don'know yet what this will be
+    } catch (err) {
+        console.error("Error sending email via mailgun: ", err);
+        console.log("MAILGUN_API_KEY: ", process.env.MAILGUN_API_KEY);
+        res.status(500).json({ error: "Failed to send email via mailgun" });
+    }
 });
+
+app.post('/api/doc-add-user', async (req, res) => {
+    const data = {
+        email: req.body.email,
+        id: req.body.id
+    }
+    // get document to add new user to
+    const doc = await dbFunctions.getOne("documents", data.id);
+    // add new user to the document
+    doc.users.append(data.email);
+    // update the document in the database
+    const result = await dbFunctions.updateOneDoc("documents", doc);
+
+    res.json(result); // not sure what this will be, haven't checked
+})
 
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}`));
