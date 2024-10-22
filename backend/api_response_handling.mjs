@@ -170,23 +170,30 @@ app.post('/api/get-user-docs', async (req, res) => {
 
 app.post('/api/share-doc', async (req, res) => {
     try {
-        const registerUrl = `http://localhost:3000/register?email=${req.body.email}&id=${req.body.id}`;
+        const data = {
+            email: req.body.email,
+            id: req.body.id,
+            mailgunDomain: process.env.MAILGUN_DOMAIN
+        };
+
+        const registerUrl = `http://localhost:3000/register?email=${data.email}&id=${data.id}`;
 
         console.log("sending email with link: ", registerUrl);
-        console.log("MAILGUN_DOMAIN:", process.env.MAILGUN_DOMAIN);
+        console.log("MAILGUN_DOMAIN:", data.mailgunDomain);
         console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
-        console.log("From Address:", `Mailgun Sandbox <mailgun@sandbox2ddae29b18024d8ab280c810a65939b4.mailgun.org>`);
+        console.log("From Address:", `Excited User <mailgun@${data.mailgunDomain}>`);
 
-        const result = await mg.messages.create(process.env.MAILGUN_DOMAIN, {
-            from: `Excited User <mailgun$${process.env.MAILGUN_DOMAIN}>`,
-            to: [req.body.email],
+        
+        const result = await mg.messages.create(data.mailgunDomain, {
+            from: `mailgun@${data.mailgunDomain}`,
+            to: [data.email],
             subject: "Share document",
             text: "Testing some Mailgun awesomeness!",
             html: `<h1>Click the link below to register a new account and get access to the document ${req.body.title}</h1>
                     <a href=${registerUrl}>Get access</a>`
         });
 
-        console.log("mailgun.create result: ", result);
+        console.log("mailgun result: ", result);
         
         res.json(result); // don'know yet what this will be
     } catch (err) {
