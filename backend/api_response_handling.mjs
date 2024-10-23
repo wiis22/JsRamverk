@@ -185,11 +185,11 @@ app.post('/api/share-doc', async (req, res) => {
 
         
         const result = await mg.messages.create(data.mailgunDomain, {
-            from: `mailgun@${data.mailgunDomain}`,
+            from: `JSR Texteditor <mailgun@${data.mailgunDomain}>`,
             to: [data.email],
             subject: "Share document",
             text: "Testing some Mailgun awesomeness!",
-            html: `<h1>Click the link below to register a new account and get access to the document ${req.body.title}</h1>
+            html: `<h3>Click the link below to register a new account and get access to the document: ${req.body.title}</h3>
                     <a href="${registerUrl}">Get access</a>`
         });
 
@@ -208,10 +208,12 @@ app.post('/api/doc-add-user', async (req, res) => {
         email: req.body.email,
         id: req.body.id
     }
+    console.log("data in api/doc-add-users", data)
     // get document to add new user to
     const doc = await dbFunctions.getOne("documents", data.id);
     // add new user to the document
-    doc.users.append(data.email);
+    doc.users.push(data.email);
+    console.log("doc in api/doc-add-user");
     // update the document in the database
     const result = await dbFunctions.updateOneDoc("documents", doc);
 

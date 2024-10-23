@@ -1,11 +1,8 @@
 // src/pages/register.js
 
 import React, { useEffect, useState } from 'react';
-// import { useHistory } from "react-router-dom";
 import { useRouter } from 'next/router';
 // import RedirectComp from '@/components/RedirectDocId';
-
-// import { useParams } from 'react-router-dom';
 
 export default function Register() {
     const router = useRouter();
@@ -17,9 +14,12 @@ export default function Register() {
     const [isSubmitted, setSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    if (email) {
-        setNewUser(email);
-    }
+    // if email is provided as a URL paramater, set it as the value of new user
+    useEffect(() => {
+        if (email) {
+            setNewUser(email);
+        }
+    }, [email]);
 
     const handleNewRegister = async (e) => {
         e.preventDefault();
@@ -110,6 +110,7 @@ export default function Register() {
                                     value={newUser}
                                     placeholder='email'
                                     onChange={(e) => setNewUser(e.target.value)}
+                                    readOnly={!!email}
                                     required
                                 />
                             </div>
@@ -117,11 +118,10 @@ export default function Register() {
                             <div>
                             <label>Password: </label>
                             <input className='textarea'
-                                    type="text"
+                                    type="password"
                                     value={newPassword}
                                     placeholder='******'
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    readOnly={!!email}
                                     required
                                 />
                             </div>
@@ -129,7 +129,7 @@ export default function Register() {
                             <div>
                             <label>Confirm Password: </label>
                             <input className='textarea'
-                                    type="text"
+                                    type="password"
                                     value={newPassword2}
                                     placeholder='******'
                                     onChange={(e) => setNewPassword2(e.target.value)}

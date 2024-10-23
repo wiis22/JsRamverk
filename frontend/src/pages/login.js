@@ -94,7 +94,7 @@ export default function Login() {
                                     <div>
                                     <label>Password: </label>
                                     <input className='textarea'
-                                            type="text"
+                                            type="password"
                                             value={password}
                                             placeholder='******'
                                             onChange={(e) => setPassword(e.target.value)}

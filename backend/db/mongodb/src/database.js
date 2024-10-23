@@ -61,6 +61,7 @@ const dbFunctions = {
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection(colName);
+
         const data = {
             _id: new ObjectId(String(id))
         };
@@ -252,27 +253,33 @@ const dbFunctions = {
             // console.log('Title:', data.title);
             // console.log('Content:', data.content);
 
-            if (!ObjectId.isValid(String(data.id))) {
-                throw new Error("ID format is not valid");
-            }
+            // if (!ObjectId.isValid(String(data.id))) {
+            //     throw new Error("ID format is not valid");
+            // }
+
+            console.log("data", data)
+            console.log("id", data._id)
             // ObjectId: Needs to be super sure
             // that id is in a correct format else it wont work.
-            const objectId = new ObjectId(String(data.id));
+            // const objectId = new ObjectId(String(data.id)); // this should only be done if it's a string. in api/doc-add-user it's already an ObjectId as it becomes a string when its converted to json
+            console.log("id", data._id)
+            // console.log("objectId", objectId)
             // console.log('objectId', objectId);
 
+            console.log("here 1")
             const client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
-
+            console.log("here 2")
             const result = await col.updateOne(
-                { _id: objectId },
+                { _id: data._id },
                 { $set: { title: data.title, content: data.content, users: data.users } }
             );
-
+            console.log("here 3")
             await client.close();
 
             // console.log('result:', result);
-
+            console.log("here 4")
             return result;
 
 
