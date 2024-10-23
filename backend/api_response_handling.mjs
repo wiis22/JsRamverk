@@ -7,19 +7,69 @@ import morgan from 'morgan';
 import cors from 'cors';
 import dbFunctions from "./db/mongodb/src/database.js";
 import auth from "./auth/auth.js";
+import Httpserver from "http";
+import { Server } from "socket.io";
+
+
 
 import formData from "form-data";
 import Mailgun from "mailgun.js";
+import { title } from 'process';
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
 console.log("setting up mailgun with values:")
 console.log({username: 'api', key: process.env.MAILGUN_API_KEY})
 
 const app = express();
+const httpserver = Httpserver.createServer(app);
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true // Viktigt om du använder cookies eller andra autentiseringsdata
+}));
+
+const io = new Server(httpserver, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
+
+const dataStored = {};
+
+io.sockets.on('connection', (socket) => {
+    console.log("New user connected:", socket.id); // Nått lång och slumpat
+
+    socket.on('create', function(room) {
+        socket.join(room);
+        console.log("socket.join(room)");
+        // console.log('Message from client:', data);
+        // socket.emit('message', "Message resivecd on the server")
+        if (dataStored[room]) {
+            socket.emit('doc', dataStored[room]);
+            console.log("sentd room data to the new user:", dataStored[room]);
+        }
+    });
+
+    socket.on('doc', function(data) {
+        const roomId = data.id;
+
+        dataStored[roomId] = data;
+
+        socket.to(roomId).emit("doc", data);
+
+        console.log(`Data updated for room ${roomId}:`, data);
+        //save shit to the DB! but NOOO we shall save in the klient!
+    });
+
+});
+
 const port = process.env.PORT || 1337;
 
 app.disable('x-powered-by');
-app.use(cors());
+// app.use(cors());
 
 app.set("view engine", "ejs");
 
@@ -220,6 +270,9 @@ app.post('/api/doc-add-user', async (req, res) => {
 })
 
 
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}`));
+const server = httpserver.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+// app.listen(port, () => console.log(`Example app listening on port ${port}`));
 // export of server is for testing test
 export default server;

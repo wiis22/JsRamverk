@@ -115,7 +115,7 @@ export default function Home() {
                                         setRouteNewDoc(`/doc/${doc._id}`);
                                         setNewDocId(doc._id)
                                         }}>
-                                        <a>{doc.title}</a>
+                                        <a>*{doc.title}</a>
                                     </div>
                                     ))
                             )}

@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-// import { useParams } from 'react-router-dom';
+import { io } from "socket.io-client";
+
+const SERVER_URL = "http://localhost:1337";
+
+let socket;
 
 export default function Doc() {
     const router = useRouter();
@@ -17,22 +21,66 @@ export default function Doc() {
     // Fetch document data based on id
     useEffect(() => {
         const fetchDocument = async () => {
-            // console.log(id);
+            try {
+                if (!id) {
+                    throw new Error("No document ID provided.");
+                }
 
-            const response = await fetch(`https://wiis22.azurewebsites.net/api/doc/${id}`);
-            const result = await response.json();
-            // console.log(response);
+                // fetch document from the API
+                const response = await fetch(`https://wiis22.azurewebsites.net/api/doc/${id}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch document data.");
+                }
+                const result = await response.json();
 
-            setTitle(result.title);
-            setContent(result.content);
-            setUsers(result.users);
+                setTitle(result.title);
+                setContent(result.content);
+                setUsers(result.users);
+
+
+            } catch (error) {
+                console.error("Error fetching document:", error.message);
+            }
         };
 
-        if (id != undefined) {
-            fetchDocument();
+        fetchDocument();
+
+        // setup socker connection
+        socket = io(SERVER_URL, {
+            withCredentials: true,
+            transports: ["websocket", "polling"]
+        });
+
+        socket.emit("create", id);
+
+        socket.on("doc", (data) => {
+            setTitle(data.title);
+            setContent(data.content);
+        });
+
+        // disconnect socket
+        return () => {
+            socket.disconnect();
+        };
+
+    }, [id]);
+
+
+    const handleCharUpdate = async (valueToUpdate, value) => {
+        if (valueToUpdate === "title") {
+            setTitle(value);
+        } else if (valueToUpdate === "content") {
+            setContent(value);
         }
-    }, [id]); // the id part on this row is for if the id parameter in the URL changes, this runs again
-        //behöver en try typ om inte id finns
+
+        const data = {
+            id: id,
+            title: title,
+            content: content
+        }
+
+        socket.emit("doc", data);
+    };
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -99,7 +147,7 @@ export default function Doc() {
         <div>
             <div className="share-document">
                 <button onClick={handleStartSharing} className="button start-sharing-button" hidden={shareButtonHidden}>Share</button>
-                
+
                 <form onSubmit={handleShareDocument} className="share-document-form" hidden={shareFormHidden}>
                     <label>Email</label>
                     <input className="share-email-input textarea"
@@ -118,15 +166,15 @@ export default function Doc() {
                 <input className='doc-title textarea'
                         type="text"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e) => handleCharUpdate("title", e.target.value )}
                         required
                     />
                 <label>Content:</label>
                 <textarea className='doc-content textarea'
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        onChange={(e) => handleCharUpdate("content", e.target.value)}
                     />
-                <button className="button" type="submit">Update</button>
+                <button className="button" type="submit">Save</button>
             </form>
         </div>
     )
