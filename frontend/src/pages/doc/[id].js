@@ -105,6 +105,7 @@ export default function Doc() {
                     <input className="share-email-input textarea"
                             type="text"
                             value={emailShareTo}
+                            placeholder='email'
                             onChange={(e) => setEmailShareTo(e.target.value)}
                             required
                     />

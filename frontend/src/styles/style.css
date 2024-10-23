@@ -170,3 +170,7 @@ footer {
 [hidden] {
     display: none !important;
 }
+
+.new-register {
+    padding-top: 0.2rem;
+}

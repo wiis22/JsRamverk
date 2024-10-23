@@ -183,7 +183,6 @@ app.post('/api/share-doc', async (req, res) => {
         console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
         console.log("From Address:", `Excited User <mailgun@${data.mailgunDomain}>`);
 
-        
         const result = await mg.messages.create(data.mailgunDomain, {
             from: `JSR Texteditor <mailgun@${data.mailgunDomain}>`,
             to: [data.email],

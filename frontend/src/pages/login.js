@@ -13,6 +13,7 @@ export default function Login() {
     const [okToken, setOkToken] = useState(false);
     const [newToken, setNewToken] = useState(null);
     const [isSubmitted, setSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
 
     useEffect(() => {
@@ -28,12 +29,17 @@ export default function Login() {
         e.preventDefault();
 
         setSubmitted(true);
+
+        console.log("inne i handlelogin");
+
         const loginData = {
             email: user,
             password: password
         };
 
         try {
+            console.log("inne i try i handlelogin");
+
             const response = await fetch('http://localhost:1337/api/login', {
                 method: 'POST',
                 headers: {
@@ -41,14 +47,43 @@ export default function Login() {
                 },
                 body: JSON.stringify(loginData)
             });
-            
-            
+
             if (!response.ok) {
                 console.log("response.ok not ok")
                 throw new Error(`HTTP error, status ${response.status}`);
             }
 
             const jwtToken = await response.json();
+
+            if (jwtToken === "Couldn't find user data based on email") {
+                setErrorMessage("NO user by that email/username.")
+                setSubmitted(false);
+
+                setTimeout(() => {
+                    setErrorMessage("")
+                }, 3000)
+
+                setUser("");
+                setPassword("");
+                return;
+            }
+
+            if (!jwtToken) {
+                setErrorMessage("Password incorrect.")
+                setSubmitted(false);
+
+                setTimeout(() => {
+                    setErrorMessage("")
+                }, 3000)
+
+                setUser("");
+                setPassword("");
+                return;
+            }
+
+            console.log("jwttoken: ", jwtToken);
+
+
             setNewToken(jwtToken);
             sessionStorage.setItem('token', jwtToken);
             sessionStorage.setItem('user', user);
@@ -101,6 +136,9 @@ export default function Login() {
                                             required
                                         />
                                     </div>
+
+                                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
                                     <button className='new-doc-button' type="submit" disabled={isSubmitted}>Login</button>
                                 </form>
                             </div>
