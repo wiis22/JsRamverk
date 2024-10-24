@@ -45,7 +45,7 @@ export default function Doc() {
 
         fetchDocument();
 
-        // setup socker connection
+        // setup socket connection
         socket = io(SERVER_URL, {
             withCredentials: true,
             transports: ["websocket", "polling"]
@@ -67,16 +67,20 @@ export default function Doc() {
 
 
     const handleCharUpdate = async (valueToUpdate, value) => {
+        let updatedTitle = title;
+        let updatedContent = content;
         if (valueToUpdate === "title") {
             setTitle(value);
+            updatedTitle = value;
         } else if (valueToUpdate === "content") {
             setContent(value);
+            updatedContent = value;
         }
 
         const data = {
             id: id,
-            title: title,
-            content: content
+            title: updatedTitle,
+            content: updatedContent
         }
 
         socket.emit("doc", data);
