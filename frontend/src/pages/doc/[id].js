@@ -260,7 +260,7 @@ export default function Doc() {
                                     key={index}
                                     className='comment'
                                 >
-                                    <strong>Comment for: "{comment.textCommented}"</strong>
+                                    <strong>Comment for: &quot;{comment.textCommented}&quot;</strong>
                                     <p>{comment.commentText}</p>
 
                                     <button
