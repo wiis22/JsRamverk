@@ -291,13 +291,13 @@ const dbFunctions = {
     },
 
     /**
-     * Insert one into the collection
+     * Fethcing commments for a secific docid from the collection.
      *
      * @async
      *
      * @param {string} docId The unique id of the doc to retrive comments for.
      *
-     * @throws Error when database operation fails.
+     * @throws {Error} Throws error if database operation fails.
      *
      * @return {Array<object>} Returns and array of comments associatet with the doc.
      */
