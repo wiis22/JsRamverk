@@ -16,7 +16,7 @@ export default async function checkLoggedIn(){
                 // setToken(storedToken);
                 // console.log("token: ", token);
 
-                const response = await fetch('http://localhost:1337/api/verify-logged-in', {
+                const response = await fetch('https://wiis22.azurewebsites.net/api/verify-logged-in', {
                     method: 'GET',
                     headers: {
                         'x-access-token': storedToken

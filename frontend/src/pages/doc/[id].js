@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { io } from "socket.io-client";
 
-const SERVER_URL = "http://localhost:1337";
+const SERVER_URL = "https://wiis22.azurewebsites.net";
 
 let socket;
 
@@ -41,7 +41,7 @@ export default function Doc() {
                 setUsers(result.users);
 
                 // Get the comments
-                const commentResp = await fetch(`http://localhost:1337/api/comments/${id}`);
+                const commentResp = await fetch(`https://wiis22.azurewebsites.net/api/comments/${id}`);
                 const commentRes = await commentResp.json();
                 // console.log("commentRes:", commentRes);
 
@@ -178,7 +178,7 @@ export default function Doc() {
 
         // console.log("data", data)
 
-        const response = await fetch('http://localhost:1337/api/share-doc', {
+        const response = await fetch('https://wiis22.azurewebsites.net/api/share-doc', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

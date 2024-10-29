@@ -40,7 +40,7 @@ export default function Login() {
         try {
             // console.log("inne i try i handlelogin");
 
-            const response = await fetch('http://localhost:1337/api/login', {
+            const response = await fetch('https://wiis22.azurewebsites.net/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

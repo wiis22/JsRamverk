@@ -40,7 +40,7 @@ export default function Home() {
             // }
             try{
                 // console.log("data after setuser: " , userFromSession);
-                const response = await fetch('http://localhost:1337/api/get-user-docs', {
+                const response = await fetch('https://wiis22.azurewebsites.net/api/get-user-docs', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ export default function Home() {
         // console.log("data in handleNewDocSubmit:", data);
         
         try {
-            const response = await fetch('http://localhost:1337/api/new-doc', {
+            const response = await fetch('https://wiis22.azurewebsites.net/api/new-doc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

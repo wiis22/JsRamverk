@@ -42,7 +42,7 @@ export default function Register() {
 
 
         try {
-            const registerResponse = await fetch('http://localhost:1337/api/register', {
+            const registerResponse = await fetch('https://wiis22.azurewebsites.net/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ export default function Register() {
 
             // if email exist, add user to document (got here via email link)
             if (email) {
-                const addUserResponse = await fetch('http://localhost:1337/api/doc-add-user', {
+                const addUserResponse = await fetch('https://wiis22.azurewebsites.net/api/doc-add-user', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
