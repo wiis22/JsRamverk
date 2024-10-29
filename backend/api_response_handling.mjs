@@ -19,14 +19,14 @@ const app = express();
 const httpserver = Httpserver.createServer(app);
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://wiis22-frontend.azurewebsites.net/',
     methods: ['GET', 'POST'],
     credentials: true // Viktigt om du använder cookies eller andra autentiseringsdata
 }));
 
 const io = new Server(httpserver, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://wiis22-frontend.azurewebsites.net/",
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -240,7 +240,7 @@ app.post('/api/share-doc', async (req, res) => {
             mailgunDomain: process.env.MAILGUN_DOMAIN
         };
 
-        const registerUrl = `http://localhost:3000/register?email=${data.email}&id=${data.id}`;
+        const registerUrl = `https://wiis22-frontend.azurewebsites.net/register?email=${data.email}&id=${data.id}`;
 
         // console.log("sending email with link: ", registerUrl);
         // console.log("MAILGUN_DOMAIN:", data.mailgunDomain);
