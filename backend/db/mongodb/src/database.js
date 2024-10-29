@@ -13,6 +13,7 @@ console.log("dsn: " + dsn)
 const fs = require("fs");
 const path = require("path");
 const { error, log } = require("console");
+const common = require('mocha/lib/interfaces/common');
 
 
 const dbFunctions = {
@@ -287,7 +288,36 @@ const dbFunctions = {
             console.error("Error in updateOneDoc:", err.message);
             throw new Error("Error updating a document");
         }
-    }
+    },
+
+    /**
+     * Insert one into the collection
+     *
+     * @async
+     *
+     * @param {string} docId The unique id of the doc to retrive comments for.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {Array<object>} Returns and array of comments associatet with the doc.
+     */
+    getComments: async function getComments(docId) {
+        try {
+            const client  = await mongo.connect(dsn);
+            const db = await client.db();
+            const col = await db.collection("comments");
+
+            const result = await col.find({ docId }).toArray();
+
+            await client.close();
+
+            return result;
+        } catch (err) {
+            console.error("error in getComments:", err.stack);
+            throw new Error("Failed to retrive commetns from the DB.");
+        }
+
+    },
 };
 
 module.exports = dbFunctions;
