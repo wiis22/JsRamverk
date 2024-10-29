@@ -69,8 +69,9 @@ io.sockets.on('connection', (socket) => {
 
         const savedComment = await dbFunctions.addOneComent(commentData);
 
-        io.to(commentData.id).emit('comment', savedComment.ops[0]);
-        console.log(`New commens added to doc ${commentData.id}:`, savedComment.ops[0]);
+        console.log("savedComment:", savedComment);
+        io.to(commentData.docId).emit('comment', savedComment);
+        console.log(`New comment added to doc ${commentData.docId}:`, savedComment);
     })
 
 });

@@ -44,7 +44,7 @@ export default function Doc() {
                 const commentRep = await fetch(`http://localhost:1337/api/comments/${id}`);
                 const commentRes = await commentRep.json();
                 console.log("commentRes:", commentRes);
-                
+
                 setComments(commentRes);
 
 
@@ -97,11 +97,11 @@ export default function Doc() {
             docId: id,
             textStartIndex: commentPosition.start,
             textEndIndex: commentPosition.end,
-            commentText: newComment,
-            user: "test kanske kan ta bort denna"
+            commentText: newComment
         }
 
         console.log("commentData:", commentData);
+
         
 
         socket.emit("comment", commentData);
@@ -239,7 +239,8 @@ export default function Doc() {
                 <ul>
                     {comments.map((comment, index) => (
                         <li key={index}>
-                            <strong>Text postition {comment.textStartIndex}-{comment.textEndIndex}:</strong> {comment.commentText}
+                            <strong>Comment for: "{content.substring(comment.textStartIndex, comment.textEndIndex)}":</strong>
+                            <p>{comment.commentText}</p>
                         </li>
                     ))}
                 </ul>
