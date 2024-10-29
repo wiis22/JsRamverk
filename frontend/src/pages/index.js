@@ -39,7 +39,7 @@ export default function Home() {
             //     user: user
             // }
             try{
-                console.log("data after setuser: " , userFromSession);
+                // console.log("data after setuser: " , userFromSession);
                 const response = await fetch('http://localhost:1337/api/get-user-docs', {
                     method: 'POST',
                     headers: {
@@ -48,11 +48,11 @@ export default function Home() {
                     body: JSON.stringify({ user: userFromSession })
                 });
 
-                console.log("response i Home:", response);
+                // console.log("response i Home:", response);
 
                 const result = await response.json();
 
-                console.log("result i Home: ", result);
+                // console.log("result i Home: ", result);
                 setDocs(result);
             } catch (err) {
                 console.error("error fetching the docs:", err);
@@ -71,7 +71,7 @@ export default function Home() {
             title: newTitle,
             user: loggedUser
         };
-        console.log("data in handleNewDocSubmit:", data);
+        // console.log("data in handleNewDocSubmit:", data);
         
         try {
             const response = await fetch('http://localhost:1337/api/new-doc', {
@@ -88,7 +88,7 @@ export default function Home() {
 
             const newDocId = await response.json();
 
-            console.log("redirecting to /doc/" + newDocId);
+            // console.log("redirecting to /doc/" + newDocId);
             // return redirect(`/doc/${newDocId}`);
             setRouteNewDoc(`/doc/${newDocId}`);
             setNewDocId(newDocId);

@@ -41,9 +41,9 @@ export default function Doc() {
                 setUsers(result.users);
 
                 // Get the comments
-                const commentRep = await fetch(`http://localhost:1337/api/comments/${id}`);
-                const commentRes = await commentRep.json();
-                console.log("commentRes:", commentRes);
+                const commentResp = await fetch(`http://localhost:1337/api/comments/${id}`);
+                const commentRes = await commentResp.json();
+                // console.log("commentRes:", commentRes);
 
                 setComments(commentRes);
 
@@ -69,7 +69,12 @@ export default function Doc() {
         });
 
         socket.on("comment", (comment) => {
-            setComments((prevComments) => [...prevComments, comment]);
+            // console.log("comment:", comment)
+            if (comment.removed) {
+                setComments((prevComments) => prevComments.filter((_, i) => i !== comment.index));
+            } else {
+                setComments((prevComments) => [...prevComments, comment.commentData]);
+            }
         });
 
         // disconnect socket
@@ -81,11 +86,11 @@ export default function Doc() {
 
 
     const handleAddComment = () => {
-        console.log("inne i handleAddComment");
-        console.log("newComment:", newComment );
-        console.log("comPos start:", commentPosition.start);
+        // console.log("inne i handleAddComment");
+        // console.log("newComment:", newComment );
+        // console.log("comPos start:", commentPosition.start);
         
-        console.log("comPos end:", commentPosition.end);
+        // console.log("comPos end:", commentPosition.end);
 
         //den kommer inte förbi denna skit.
         if (newComment === "" || commentPosition.start === commentPosition.end) {
@@ -95,12 +100,11 @@ export default function Doc() {
 
         const commentData = {
             docId: id,
-            textStartIndex: commentPosition.start,
-            textEndIndex: commentPosition.end,
+            textCommented: content.substring(commentPosition.start, commentPosition.end),
             commentText: newComment
         }
-
-        console.log("commentData:", commentData);
+// 
+//         console.log("commentData:", commentData);
 
         
 
@@ -113,7 +117,7 @@ export default function Doc() {
 
         const end = e.target.selectionEnd;
 
-        console.log("text selected pos start, end :", start, end);
+        // console.log("text selected pos start, end :", start, end);
 
         setCommentPosition({ start, end });
     }
@@ -153,7 +157,7 @@ export default function Doc() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringfy(data)
         });
     }
 
@@ -172,7 +176,7 @@ export default function Doc() {
             title: title
         };
 
-        console.log("data", data)
+        // console.log("data", data)
 
         const response = await fetch('http://localhost:1337/api/share-doc', {
             method: 'POST',
@@ -182,20 +186,30 @@ export default function Doc() {
             body: JSON.stringify(data)
         });
 
-        console.log("response", response)
+        // console.log("response", response)
         const res = await response.json();
     }
 
     const handleStartSharing = async (e) => {
         e.preventDefault();
 
-        console.log("started sharing")
+        // console.log("started sharing")
 
         // make share document form not hidden
         setShareFormHidden(false);
 
         // make start sharing button hidden
         setShareButtonHidden(true);
+    }
+
+    const handleRemoveComment = async (commentId, index) => {
+        const data = {
+            docId: id,
+            commentId: commentId,
+            index: index
+        };
+
+        socket.emit("comment", data, true);
     }
 
 
@@ -217,46 +231,62 @@ export default function Doc() {
                 </form>
             </div>
 
-            <form onSubmit={handleSave} className='new-doc'>
-                <label>Title:</label>
-                <input className='doc-title textarea'
-                        type="text"
-                        value={title}
-                        onChange={(e) => handleCharUpdate("title", e.target.value )}
-                        required
-                    />
-                <label>Content:</label>
-                <textarea className='doc-content textarea'
-                        value={content}
-                        onChange={(e) => handleCharUpdate("content", e.target.value)}
-                        onSelect={handleTextSelect}
-                    />
-                <button className="button" type="submit">Save</button>
-            </form>
+            <div className='doc-container'>
+                <div className='doc-left-col'>
+                    <form onSubmit={handleSave} className='new-doc'>
+                        <label>Title:</label>
+                        <input className='doc-title textarea'
+                                type="text"
+                                value={title}
+                                onChange={(e) => handleCharUpdate("title", e.target.value )}
+                                required
+                            />
+                        <label>Content:</label>
+                        <textarea className='doc-content textarea'
+                                value={content}
+                                onChange={(e) => handleCharUpdate("content", e.target.value)}
+                                onSelect={handleTextSelect}
+                            />
+                        <button className="button" type="submit">Save</button>
+                    </form>
+                </div>
 
-            <div>
-                <h3>Comments</h3>
-                <ul>
-                    {comments.map((comment, index) => (
-                        <li key={index}>
-                            <strong>Comment for: "{content.substring(comment.textStartIndex, comment.textEndIndex)}":</strong>
-                            <p>{comment.commentText}</p>
-                        </li>
-                    ))}
-                </ul>
+                <div className='comments-container doc-right-col'>
+                    <div className='comments'>
+                        <h3>Comments</h3>
+                        <ul>
+                            {comments.map((comment, index) => (
+                                <li
+                                    key={index}
+                                    className='comment'
+                                >
+                                    <strong>Comment for: "{comment.textCommented}"</strong>
+                                    <p>{comment.commentText}</p>
+
+                                    <button
+                                        className='remove-comment-button button'
+                                        onClick={() => handleRemoveComment(comment._id, index)}
+                                    >
+                                        Remove comment
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className='add-comment'>
+                        <h4>Add a commment</h4>
+                        <p>Remember to select what part you would like to comment.</p>
+                        <textarea className='comments-textarea textarea'
+                            value={newComment}
+                            maxLength={200}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder='Write your comment here.'
+                        />
+                        <button className='button' onClick={handleAddComment}>Add comment</button>
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <h4>Add a commment</h4>
-                <p>Remember to select what part you would like to comment.</p>
-                <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder='Write your comment here.'
-                />
-                <button className='button' onClick={handleAddComment}>Add comment</button>
-            </div>
-
         </div>
     )
 }

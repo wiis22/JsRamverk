@@ -52,7 +52,7 @@ export default function Register() {
 
             const data = await registerResponse.json();
 
-            console.log("data från api register:", data);
+            // console.log("data från api register:", data);
 
             if (!data.success) {
                 throw new Error(data.message || "Registation failed");

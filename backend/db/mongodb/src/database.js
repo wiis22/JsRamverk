@@ -7,7 +7,7 @@ require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 const { MongoClient, ObjectId } = require("mongodb"); 
 let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.ehwhv.mongodb.net/texteditor?retryWrites=true&w=majority&appName=Cluster0`;
-console.log("dsn: " + dsn)
+// console.log("dsn: " + dsn)
 // const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
 const fs = require("fs");
@@ -30,11 +30,10 @@ const dbFunctions = {
      * @return {string} Return the id.
      */
     addOne: async function addOne(colName, data) {
-        console.log('DSN:', dsn);
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection(colName);
-        console.log("data inne i addOne db:", data);
+        // console.log("data inne i addOne db:", data);
         
         const result = await col.insertOne(data);
 
@@ -58,7 +57,6 @@ const dbFunctions = {
      * @return {object} Return info about the operation.
      */
     deleteOne: async function deleteOne(colName, id) {
-        console.log('DSN:', dsn);
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection(colName);
@@ -132,7 +130,7 @@ const dbFunctions = {
             // console.log('DSN:', dsn);
             const client  = await mongo.connect(dsn);
             const db = await client.db();
-            console.log("user inne i getUserDocs:", username);
+            // console.log("user inne i getUserDocs:", username);
             
             const col = await db.collection(colName);
             
@@ -142,9 +140,9 @@ const dbFunctions = {
 
             await client.close();
 
-            console.log("result inne i getuserDocs:", result);
+            // console.log("result inne i getuserDocs:", result);
             // console.log("result2 inne i getuserDocs:", result2);
-            console.log("result3 inne i getuserDocs:", result3);
+            // console.log("result3 inne i getuserDocs:", result3);
 
             return result;
         } catch (err) {
@@ -258,29 +256,29 @@ const dbFunctions = {
             //     throw new Error("ID format is not valid");
             // }
 
-            console.log("data", data)
-            console.log("id", data._id)
+            // console.log("data", data)
+            // console.log("id", data._id)
             // ObjectId: Needs to be super sure
             // that id is in a correct format else it wont work.
             // const objectId = new ObjectId(String(data.id)); // this should only be done if it's a string. in api/doc-add-user it's already an ObjectId as it becomes a string when its converted to json
-            console.log("id", data._id)
+            // console.log("id", data._id)
             // console.log("objectId", objectId)
             // console.log('objectId', objectId);
 
-            console.log("here 1")
+            // console.log("here 1")
             const client  = await mongo.connect(dsn);
             const db = await client.db();
             const col = await db.collection(colName);
-            console.log("here 2")
+            // console.log("here 2")
             const result = await col.updateOne(
                 { _id: data._id },
                 { $set: { title: data.title, content: data.content, users: data.users } }
             );
-            console.log("here 3")
+            // console.log("here 3")
             await client.close();
 
             // console.log('result:', result);
-            console.log("here 4")
+            // console.log("here 4")
             return result;
 
 
@@ -320,7 +318,7 @@ const dbFunctions = {
     },
 
     /**
-     * Insert one ccomment into the collection comments.
+     * Insert one comment into the collection comments.
      *
      * @async
      *
@@ -331,20 +329,19 @@ const dbFunctions = {
      * @return {object} Returns the result.
      */
     addOneComent: async function addOneComent(data) {
-        console.log('DSN:', dsn);
+        // console.log('DSN:', dsn);
         const client  = await mongo.connect(dsn);
         const db = await client.db();
         const col = await db.collection('comments');
 
-        console.log("data inne i addOneComment db:", data);
+        // console.log("data inne i addOneComment db:", data);
 
         const result = await col.insertOne(data);
 
         await client.close();
 
         return result;
-    },
-    
+    }
 };
 
 module.exports = dbFunctions;

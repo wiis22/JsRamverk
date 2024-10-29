@@ -30,7 +30,7 @@ export default function Login() {
 
         setSubmitted(true);
 
-        console.log("inne i handlelogin");
+        // console.log("inne i handlelogin");
 
         const loginData = {
             email: user,
@@ -38,7 +38,7 @@ export default function Login() {
         };
 
         try {
-            console.log("inne i try i handlelogin");
+            // console.log("inne i try i handlelogin");
 
             const response = await fetch('http://localhost:1337/api/login', {
                 method: 'POST',
@@ -49,7 +49,7 @@ export default function Login() {
             });
 
             if (!response.ok) {
-                console.log("response.ok not ok")
+                // console.log("response.ok not ok")
                 throw new Error(`HTTP error, status ${response.status}`);
             }
 
@@ -81,7 +81,7 @@ export default function Login() {
                 return;
             }
 
-            console.log("jwttoken: ", jwtToken);
+            // console.log("jwttoken: ", jwtToken);
 
 
             setNewToken(jwtToken);
@@ -89,7 +89,7 @@ export default function Login() {
             sessionStorage.setItem('user', user);
 
         } catch (err) {
-            console.log("this happens when error fetching api/login")
+            // console.log("this happens when error fetching api/login")
             //maby check what whent wrong like incorrect username/password.
             console.error("Fetch error:", err)
         }

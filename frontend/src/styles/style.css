@@ -174,3 +174,57 @@ footer {
 .new-register {
     padding-top: 0.2rem;
 }
+
+.doc-container {
+    display: flex;
+}
+
+.doc-left-col {
+    flex: 5;
+}
+
+.doc-right-col {
+    flex: 2;
+}
+
+.comments {
+
+}
+
+.comments h3 {
+    margin-bottom: 1rem;
+}
+
+.comments-textarea {
+    resize: vertical;
+    width: 100%;
+}
+
+.comments-container {
+    margin: 1rem;
+}
+
+.add-comment {
+
+}
+
+.remove-comment-button {
+    opacity: 0;
+    background-color: rgb(197, 77, 77);
+}
+
+.remove-comment-button:hover {
+    background-color: rgb(192, 101, 101);
+}
+
+.comment:hover .remove-comment-button {
+    opacity: 1;
+}
+
+.comment {
+    margin-bottom: 1rem;
+}
+
+.comment p {
+    margin: 0;
+}

@@ -35,20 +35,19 @@ const io = new Server(httpserver, {
 const dataStored = {};
 
 io.sockets.on('connection', (socket) => {
-    console.log("New user connected:", socket.id);
+    // console.log("New user connected:", socket.id);
 
     socket.on('create', async function(room) {
         socket.join(room);
-        console.log("socket.join(room)");
+        // console.log("socket.join(room)");
         // console.log('Message from client:', data);
         // socket.emit('message', "Message resivecd on the server")
         if (dataStored[room]) {
             socket.emit('doc', dataStored[room]);
             console.log("sentd room data to the new user:", dataStored[room]);
         }
-
-        const comments = await dbFunctions.getComments(room);
-        socket.emit('comments', comments);
+        // const comments = await dbFunctions.getComments(room);
+        // socket.emit('comments', comments);
     });
 
     socket.on('doc', function(data) {
@@ -58,22 +57,27 @@ io.sockets.on('connection', (socket) => {
 
         socket.to(roomId).emit("doc", data);
 
-        console.log(`Data updated for room ${roomId}:`, data);
+        // console.log(`Data updated for room ${roomId}:`, data);
         //save shit to the DB! but NOOO we shall save in the klient!
     });
 
 
-    socket.on('comment', async function(commentData) {
+    socket.on('comment', async function(commentData, remove=false) {
+        let comment = {
+            commentData: commentData,
+            removed: remove
+        };
 
-        console.log("commentData:", commentData);
+        if (remove) {
+            const removeCommentResult = await dbFunctions.deleteOne("comments", commentData.commentId);
+            comment.index = commentData.index;
+        } else {
+            const addCommentResult = await dbFunctions.addOneComent(commentData);
+        }
 
-        const savedComment = await dbFunctions.addOneComent(commentData);
 
-        console.log("savedComment:", savedComment);
-        io.to(commentData.docId).emit('comment', savedComment);
-        console.log(`New comment added to doc ${commentData.docId}:`, savedComment);
+        io.to(commentData.docId).emit('comment', comment);
     })
-
 });
 
 const port = process.env.PORT || 1337;
@@ -100,10 +104,10 @@ app.get("/api/verify-logged-in", async (req, res) => {
     };
 
     const jwtToken = req.headers['x-access-token'];
-    console.log("jwtToken i verify-api!: ", jwtToken);
+    // console.log("jwtToken i verify-api!: ", jwtToken);
 
     const result = await auth.verifyToken(jwtToken);
-    console.log("result i api verify: ", result);
+    // console.log("result i api verify: ", result);
     
     if (result) {
         data.loggedIn = result; // true
@@ -122,7 +126,7 @@ app.post("/api/login", async (req, res) => {
 
     const result = await auth.login(loginData);
 
-    console.log("result in /api/login:", result);
+    // console.log("result in /api/login:", result);
 
     res.json(result);
 });
@@ -139,7 +143,7 @@ app.post("/api/register", async (req, res) => {
         //     throw new Error(result.message || "Registation failed");
         // }
 
-        console.log("result in api/register", result)
+        // console.log("result in api/register", result)
         res.json({ success: true, data: result });
 
     } catch (err) {
@@ -172,7 +176,7 @@ app.post("/api/new-doc", async (req, res) => {
         content: "",
         users: [req.body.user]
     };
-    console.log("data inne i api/new-doc:", data);
+    // console.log("data inne i api/new-doc:", data);
     
     const result = await dbFunctions.addOne("documents", data); //back from addOne will be the id
 
@@ -218,7 +222,7 @@ app.get('/api/get-all-docs', async (req, res) => {
 
 app.post('/api/get-user-docs', async (req, res) => {
     try {
-        console.log("body: ", req.body.user);
+        // console.log("body: ", req.body.user);
         const username = req.body.user;
         const result = await dbFunctions.getUserDocs("documents" ,username);
         res.json(result);
@@ -238,10 +242,10 @@ app.post('/api/share-doc', async (req, res) => {
 
         const registerUrl = `http://localhost:3000/register?email=${data.email}&id=${data.id}`;
 
-        console.log("sending email with link: ", registerUrl);
-        console.log("MAILGUN_DOMAIN:", data.mailgunDomain);
-        console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
-        console.log("From Address:", `Excited User <mailgun@${data.mailgunDomain}>`);
+        // console.log("sending email with link: ", registerUrl);
+        // console.log("MAILGUN_DOMAIN:", data.mailgunDomain);
+        // console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
+        // console.log("From Address:", `Excited User <mailgun@${data.mailgunDomain}>`);
 
         const result = await mg.messages.create(data.mailgunDomain, {
             from: `JSR Texteditor <mailgun@${data.mailgunDomain}>`,
@@ -252,12 +256,12 @@ app.post('/api/share-doc', async (req, res) => {
                     <a href="${registerUrl}">Get access</a>`
         });
 
-        console.log("mailgun result: ", result);
+        // console.log("mailgun result: ", result);
         
         res.json(result); // don'know yet what this will be
     } catch (err) {
         console.error("Error sending email via mailgun: ", err);
-        console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
+        // console.log("MAILGUN_API_KEY:", process.env.MAILGUN_API_KEY);
         res.status(500).json({ error: "Failed to send email via mailgun" });
     }
 });
@@ -267,12 +271,12 @@ app.post('/api/doc-add-user', async (req, res) => {
         email: req.body.email,
         id: req.body.id
     }
-    console.log("data in api/doc-add-users", data)
+    // console.log("data in api/doc-add-users", data)
     // get document to add new user to
     const doc = await dbFunctions.getOne("documents", data.id);
     // add new user to the document
     doc.users.push(data.email);
-    console.log("doc in api/doc-add-user");
+    // console.log("doc in api/doc-add-user");
     // update the document in the database
     const result = await dbFunctions.updateOneDoc("documents", doc);
 
