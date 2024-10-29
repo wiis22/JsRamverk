@@ -19,14 +19,14 @@ const app = express();
 const httpserver = Httpserver.createServer(app);
 
 app.use(cors({
-    origin: 'https://wiis22-frontend.azurewebsites.net/',
+    origin: 'https://wiis22-frontend.azurewebsites.net',
     methods: ['GET', 'POST'],
     credentials: true // Viktigt om du använder cookies eller andra autentiseringsdata
 }));
 
 const io = new Server(httpserver, {
     cors: {
-        origin: "https://wiis22-frontend.azurewebsites.net/",
+        origin: "https://wiis22-frontend.azurewebsites.net",
         methods: ["GET", "POST"],
         credentials: true
     }

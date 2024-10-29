@@ -27,7 +27,7 @@ export default function Home() {
             }
         }
         verifyLoggedIn();
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const fetchDocs = async () => {
