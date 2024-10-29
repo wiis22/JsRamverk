@@ -9,16 +9,11 @@ import dbFunctions from "./db/mongodb/src/database.js";
 import auth from "./auth/auth.js";
 import Httpserver from "http";
 import { Server } from "socket.io";
-
-
-
 import formData from "form-data";
 import Mailgun from "mailgun.js";
-import { title } from 'process';
+
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY});
-console.log("setting up mailgun with values:")
-console.log({username: 'api', key: process.env.MAILGUN_API_KEY})
 
 const app = express();
 const httpserver = Httpserver.createServer(app);
@@ -40,7 +35,7 @@ const io = new Server(httpserver, {
 const dataStored = {};
 
 io.sockets.on('connection', (socket) => {
-    console.log("New user connected:", socket.id); // Nått lång och slumpat
+    console.log("New user connected:", socket.id);
 
     socket.on('create', function(room) {
         socket.join(room);

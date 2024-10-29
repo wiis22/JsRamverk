@@ -86,7 +86,7 @@ export default function Doc() {
         socket.emit("doc", data);
     };
 
-    const handleUpdate = async (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
 
         const data = {
@@ -165,7 +165,7 @@ export default function Doc() {
                 </form>
             </div>
 
-            <form onSubmit={handleUpdate} className='new-doc'>
+            <form onSubmit={handleSave} className='new-doc'>
                 <label>Title:</label>
                 <input className='doc-title textarea'
                         type="text"
