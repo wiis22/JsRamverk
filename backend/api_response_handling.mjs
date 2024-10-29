@@ -37,7 +37,7 @@ const dataStored = {};
 io.sockets.on('connection', (socket) => {
     console.log("New user connected:", socket.id);
 
-    socket.on('create', function(room) {
+    socket.on('create', async function(room) {
         socket.join(room);
         console.log("socket.join(room)");
         // console.log('Message from client:', data);
@@ -46,6 +46,9 @@ io.sockets.on('connection', (socket) => {
             socket.emit('doc', dataStored[room]);
             console.log("sentd room data to the new user:", dataStored[room]);
         }
+
+        const comments = await dbFunctions.getComments(room);
+        socket.emit('comments', comments);
     });
 
     socket.on('doc', function(data) {
@@ -58,6 +61,17 @@ io.sockets.on('connection', (socket) => {
         console.log(`Data updated for room ${roomId}:`, data);
         //save shit to the DB! but NOOO we shall save in the klient!
     });
+
+
+    socket.on('comment', async function(commentData) {
+
+        console.log("commentData:", commentData);
+
+        const savedComment = await dbFunctions.addOneComent(commentData);
+
+        io.to(commentData.id).emit('comment', savedComment.ops[0]);
+        console.log(`New commens added to doc ${commentData.id}:`, savedComment.ops[0]);
+    })
 
 });
 
@@ -262,7 +276,29 @@ app.post('/api/doc-add-user', async (req, res) => {
     const result = await dbFunctions.updateOneDoc("documents", doc);
 
     res.json(result); // not sure what this will be, haven't checked
-})
+});
+
+app.get('/api/comments/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        if (id.length !== 24){
+            return res.status(400).send('Invalid ID format');
+        }
+
+        const result = await dbFunctions.getComments(id);
+        // console.log(result);
+
+        // if (!result) {
+        //     return res.status(404).send('Document not found');
+        // }
+
+        res.json(result);
+    } catch(error) {
+        console.error('Error fething Comments:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+});
 
 
 const server = httpserver.listen(port, () => {

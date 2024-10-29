@@ -318,6 +318,33 @@ const dbFunctions = {
         }
 
     },
+
+    /**
+     * Insert one ccomment into the collection comments.
+     *
+     * @async
+     *
+     * @param {object} data    Data to be inserted into Db.
+     *
+     * @throws {Error} Thorws error when database operation fails.
+     *
+     * @return {object} Returns the result.
+     */
+    addOneComent: async function addOneComent(data) {
+        console.log('DSN:', dsn);
+        const client  = await mongo.connect(dsn);
+        const db = await client.db();
+        const col = await db.collection('comments');
+
+        console.log("data inne i addOneComment db:", data);
+
+        const result = await col.insertOne(data);
+
+        await client.close();
+
+        return result;
+    },
+    
 };
 
 module.exports = dbFunctions;

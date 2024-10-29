@@ -17,6 +17,9 @@ export default function Doc() {
     const [shareFormHidden, setShareFormHidden] = useState(true);
     const [shareButtonHidden, setShareButtonHidden] = useState(false);
     const [users, setUsers] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [commentPosition, setCommentPosition] = useState({ start: 0, end: 0 });
 
     // Fetch document data based on id
     useEffect(() => {
@@ -36,6 +39,13 @@ export default function Doc() {
                 setTitle(result.title);
                 setContent(result.content);
                 setUsers(result.users);
+
+                // Get the comments
+                const commentRep = await fetch(`http://localhost:1337/api/comments/${id}`);
+                const commentRes = await commentRep.json();
+                console.log("commentRes:", commentRes);
+                
+                setComments(commentRes);
 
 
             } catch (error) {
@@ -58,6 +68,10 @@ export default function Doc() {
             setContent(data.content);
         });
 
+        socket.on("comment", (comment) => {
+            setComments((prevComments) => [...prevComments, comment]);
+        });
+
         // disconnect socket
         return () => {
             socket.disconnect();
@@ -65,6 +79,44 @@ export default function Doc() {
 
     }, [id]);
 
+
+    const handleAddComment = () => {
+        console.log("inne i handleAddComment");
+        console.log("newComment:", newComment );
+        console.log("comPos start:", commentPosition.start);
+        
+        console.log("comPos end:", commentPosition.end);
+
+        //den kommer inte förbi denna skit.
+        if (newComment === "" || commentPosition.start === commentPosition.end) {
+            console.log("inne i if");
+            return
+        };
+
+        const commentData = {
+            docId: id,
+            textStartIndex: commentPosition.start,
+            textEndIndex: commentPosition.end,
+            commentText: newComment,
+            user: "test kanske kan ta bort denna"
+        }
+
+        console.log("commentData:", commentData);
+        
+
+        socket.emit("comment", commentData);
+        setNewComment('');
+    };
+
+    const handleTextSelect = (e) => {
+        const start = e.target.selectionStart;
+
+        const end = e.target.selectionEnd;
+
+        console.log("text selected pos start, end :", start, end);
+
+        setCommentPosition({ start, end });
+    }
 
     const handleCharUpdate = async (valueToUpdate, value) => {
         let updatedTitle = title;
@@ -177,9 +229,33 @@ export default function Doc() {
                 <textarea className='doc-content textarea'
                         value={content}
                         onChange={(e) => handleCharUpdate("content", e.target.value)}
+                        onSelect={handleTextSelect}
                     />
                 <button className="button" type="submit">Save</button>
             </form>
+
+            <div>
+                <h3>Comments</h3>
+                <ul>
+                    {comments.map((comment, index) => (
+                        <li key={index}>
+                            <strong>Text postition {comment.textStartIndex}-{comment.textEndIndex}:</strong> {comment.commentText}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div>
+                <h4>Add a commment</h4>
+                <p>Remember to select what part you would like to comment.</p>
+                <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder='Write your comment here.'
+                />
+                <button className='button' onClick={handleAddComment}>Add comment</button>
+            </div>
+
         </div>
     )
 }
