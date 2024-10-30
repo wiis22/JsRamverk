@@ -157,7 +157,7 @@ export default function Doc() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringfy(data)
+            body: JSON.stringify(data)
         });
     }
 

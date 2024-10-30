@@ -108,7 +108,7 @@ export default function Register() {
                             <input className='textarea'
                                     type="text"
                                     value={newUser}
-                                    placeholder='email'
+                                    placeholder='Email'
                                     onChange={(e) => setNewUser(e.target.value)}
                                     readOnly={!!email}
                                     required
@@ -139,7 +139,7 @@ export default function Register() {
 
                             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
-                            <button className='new-doc-button' type="submit" disabled={isSubmitted}>register</button>
+                            <button className='new-doc-button' type="submit" disabled={isSubmitted}>Register</button>
                         </form>
                     </div>
                 </div>

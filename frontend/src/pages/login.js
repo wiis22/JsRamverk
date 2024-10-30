@@ -116,11 +116,11 @@ export default function Login() {
                             <div className='login-form'>
                                 <form onSubmit={handleLogin}>
                                     <div>
-                                    <label>Username: </label>
+                                    <label>Email: </label>
                                     <input className='textarea'
                                             type="text"
                                             value={user}
-                                            placeholder='email/username'
+                                            placeholder='Email'
                                             onChange={(e) => setUser(e.target.value)}
                                             required
                                         />
