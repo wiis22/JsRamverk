@@ -154,7 +154,7 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/update", async (req, res) => {
     const data = {
-        id: req.body.id,
+        _id: req.body.id,
         title: req.body.title,
         content: req.body.content,
         users: req.body.users

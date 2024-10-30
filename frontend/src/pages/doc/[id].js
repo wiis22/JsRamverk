@@ -61,12 +61,12 @@ export default function Doc() {
             transports: ["websocket", "polling"]
         });
 
-        socket.emit("create", id);
-
         socket.on("doc", (data) => {
             setTitle(data.title);
             setContent(data.content);
         });
+
+        socket.emit("create", id);
 
         socket.on("comment", (comment) => {
             // console.log("comment:", comment)
@@ -103,10 +103,8 @@ export default function Doc() {
             textCommented: content.substring(commentPosition.start, commentPosition.end),
             commentText: newComment
         }
-// 
 //         console.log("commentData:", commentData);
 
-        
 
         socket.emit("comment", commentData);
         setNewComment('');

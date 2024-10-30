@@ -260,7 +260,7 @@ const dbFunctions = {
             // console.log("id", data._id)
             // ObjectId: Needs to be super sure
             // that id is in a correct format else it wont work.
-            // const objectId = new ObjectId(String(data.id)); // this should only be done if it's a string. in api/doc-add-user it's already an ObjectId as it becomes a string when its converted to json
+            const objectId = new ObjectId(String(data._id)); // this should only be done if it's a string. in api/doc-add-user it's already an ObjectId as it becomes a string when its converted to json
             // console.log("id", data._id)
             // console.log("objectId", objectId)
             // console.log('objectId', objectId);
@@ -271,7 +271,7 @@ const dbFunctions = {
             const col = await db.collection(colName);
             // console.log("here 2")
             const result = await col.updateOne(
-                { _id: data._id },
+                { _id: objectId },
                 { $set: { title: data.title, content: data.content, users: data.users } }
             );
             // console.log("here 3")
